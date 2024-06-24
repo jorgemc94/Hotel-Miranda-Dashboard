@@ -1,0 +1,19 @@
+*Login
+    -/login
+
+*Contatc
+    -/contact
+
+*Bookings
+    -/bookings
+
+*Dashboard
+    -/""
+
+*Rooms
+    -/rooms
+    -/room/add
+
+*Users
+    -/users
+    -/user/add
