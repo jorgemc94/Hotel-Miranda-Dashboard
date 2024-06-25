@@ -15,8 +15,5 @@ body {
     color: #135846;
     width: 1.625em;
     height: 1.5em;
-
-    &--disable {
-        visibility: hidden;
-    }
+    cursor: pointer;
 }
