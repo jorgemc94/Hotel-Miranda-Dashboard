@@ -66,6 +66,24 @@ export const NavigationLink = styled.div `
     
 `;
 
+export const Footer = styled.div `
+    text-align: center;
+    margin-top: 3.5em;
+    padding-left: 3.5em;
+`
+
+export const TitleFooter = styled.p `
+    color: #212121;
+    font-weight: 600;
+
+`
+
+export const SubtitleFooter = styled.p `
+    color: #799283;
+    font-size: 0.875em;
+    font-weight: 300;
+    padding-bottom: 3.5em;
+`
 
 export const Header = styled.div `
     grid-area: header;
