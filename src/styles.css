@@ -10,3 +10,13 @@ body {
     width: 100%;
     background-color: #F8F8F8;
 }
+
+.icons {
+    color: #135846;
+    width: 1.625em;
+    height: 1.5em;
+
+    &--disable {
+        visibility: hidden;
+    }
+}
