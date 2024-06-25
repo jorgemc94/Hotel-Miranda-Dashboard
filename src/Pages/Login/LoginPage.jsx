@@ -14,8 +14,8 @@ export const LoginPage = () => {
             localStorage.setItem('login', 'true');
             navigate('/');
         } else {
-            alert('Invalid login credentials');
-        }
+            alert('Email or password incorrect');
+        } 
     }
 
     return (
