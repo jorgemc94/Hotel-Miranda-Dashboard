@@ -12,10 +12,10 @@ export const LoginPage = () => {
 
         if (email === event.target.email.value && password === event.target.password.value) {
             localStorage.setItem('login', 'true');
-            navigate('');
+            navigate('/');
         } else {
-            alert('Invalid login credentials');
-        }
+            alert('Email or password incorrect');
+        } 
     }
 
     return (
