@@ -17,3 +17,10 @@ body {
     height: 1.5em;
     cursor: pointer;
 }
+
+.icons--link {
+    width: 1.75em;
+    height: 1.75em;
+    margin-right: 1.625em;
+    color: #799283;
+}

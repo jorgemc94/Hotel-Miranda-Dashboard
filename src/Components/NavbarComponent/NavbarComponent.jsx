@@ -1,46 +1,21 @@
-import { Header, Menu, MenuLogo, Nav, ImageMenu, TextMenu, TextLogo, TextHeader, TitleText, IconsHeader } from "./NavbarStyled";
+import { Header, Menu, MenuLogo, Nav, ImageMenu, TextMenu, TextLogo, TextHeader, TitleText, IconsHeader, Navigation, NavigationLink } from "./NavbarStyled";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { HiMenuAlt2, HiMenuAlt3 } from "react-icons/hi";
 import '../../styles.css';
+import { HiMenuAlt2, HiMenuAlt3, HiOutlinePuzzle } from "react-icons/hi";
 import { SlBell, SlEnvolope, SlLogout } from "react-icons/sl";
 import { ImContrast } from "react-icons/im";
-
-{/*import { Header, Icons, ImageMenu, LogoMenu, Menu, Nav, Pepe, TextLogo, TextMenu, Title, TitleText } from "./NavbarStyled";
-import { useState } from "react";
-
-
+import { MdOutlineDashboard } from "react-icons/md";
+import { TfiKey } from "react-icons/tfi";
+import { LuCalendarCheck2 } from "react-icons/lu";
 
 
-
-export const NavbarComponent = () => {
-    
-
-    return (
-        <>
-            <Nav>
-                <Menu $disable={menuDisabled}>
-                    <LogoMenu>
-                        <ImageMenu src="src/assets/icon.png" alt="logo" />
-                        
-                    </LogoMenu>
-                </Menu>
-                <Header >
-                    
-                    
-                </Header>
-            </Nav>
-            <Outlet/>
-        </>
-    );
-}
-*/}
 
 export const NavbarComponent = () => {
     
 
     const [menuDisabled, setMenuDisabled] = useState(true);
-    const navigate = useNavigate();
+    const login = useNavigate();
 
     const toggleMenu = () => {
         setMenuDisabled(!menuDisabled);
@@ -48,8 +23,9 @@ export const NavbarComponent = () => {
 
     const HandlerLogoOut = () => {
         localStorage.setItem('login','false');
-        navigate('/login');
+        login('/login');
     }
+
 
     return (
         <Nav>
@@ -61,6 +37,24 @@ export const NavbarComponent = () => {
                             <TextLogo>Hotel Admin Dashboard</TextLogo>
                     </TextMenu>
                 </MenuLogo>
+                <Navigation>
+                    <NavigationLink>
+                        <MdOutlineDashboard className="icons icons--link"/>
+                        <p>Dashboard</p>
+                    </NavigationLink>
+                    <NavigationLink >
+                        <TfiKey className="icons icons--link"/>
+                        <p>Room</p>
+                    </NavigationLink>
+                    <NavigationLink >
+                        <LuCalendarCheck2 className="icons icons--link"/>
+                        <p>Bookings</p>
+                    </NavigationLink>
+                    <NavigationLink >
+                        <HiOutlinePuzzle className="icons icons--link"/>
+                        <p>Users</p>
+                    </NavigationLink>
+                </Navigation>
             </Menu>
             <Header $menuOpen={!menuDisabled}>
                 <TextHeader>
