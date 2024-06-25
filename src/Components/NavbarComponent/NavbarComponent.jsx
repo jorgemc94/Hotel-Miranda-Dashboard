@@ -1,4 +1,4 @@
-import { Header, Menu, MenuLogo, Nav, ImageMenu, TextMenu, TextLogo, TextHeader, TitleText, IconsHeader, Navigation, NavigationLink, Footer, TitleFooter, SubtitleFooter } from "./NavbarStyled";
+import { Header, Menu, MenuLogo, Nav, ImageMenu, TextMenu, TextLogo, TextHeader, TitleText, IconsHeader, Navigation, NavigationLink, Footer, TitleFooter, SubtitleFooter, User, UserImg, UserName, UserButton } from "./NavbarStyled";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../styles.css';
@@ -14,7 +14,7 @@ import { LuCalendarCheck2 } from "react-icons/lu";
 export const NavbarComponent = () => {
     
 
-    const [menuDisabled, setMenuDisabled] = useState(true);
+    const [menuDisabled, setMenuDisabled] = useState(false);
     const login = useNavigate();
 
     const toggleMenu = () => {
@@ -55,6 +55,12 @@ export const NavbarComponent = () => {
                         <p>Users</p>
                     </NavigationLink>
                 </Navigation>
+                <User>
+                    <UserImg src="src/assets/jorge.png"></UserImg>
+                    <UserName $title={true}>Jorge Macias Cordobés</UserName>
+                    <UserName>jorgemc1294@gmail.com</UserName>
+                    <UserButton>Contact Us</UserButton>
+                </User>
                 <Footer>
                     <TitleFooter>Travl Hotel Admin Dashboard</TitleFooter>
                     <SubtitleFooter>© 2024 All Rights Reserved</SubtitleFooter>

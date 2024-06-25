@@ -25,7 +25,7 @@ export const Menu = styled.div `
 export const MenuLogo = styled.div `
     display: flex;
     justify-content: center;
-    padding-top: 1em;
+    padding-top: 1.5em;
 `
 
 export const ImageMenu = styled.img`
@@ -46,7 +46,7 @@ export const TextLogo = styled.span`
 export const Navigation = styled.div `
     display: flex;
     flex-direction: column;
-    margin: 3.5em 0em;
+    margin: 2em 0em;
     color: #799283;
     padding-left: 3.5em;
 `
@@ -57,8 +57,8 @@ export const NavigationLink = styled.div `
     padding-left: 3.5em;
     cursor: pointer;
     margin-bottom: 2.5em;
-    color: ${props => props.selected ? '#E23428' : 'inherit'};
-    border-left:  2px ${props => props.selected ? '#E23428' : 'inherit'} solid;
+    color: ${props => props.$selected ? '#E23428' : 'inherit'};
+    border-left:  2px ${props => props.$selected ? '#E23428' : 'inherit'} solid;
     p {
         margin: 0;
         font-size: 1.125em;
@@ -66,10 +66,42 @@ export const NavigationLink = styled.div `
     
 `;
 
+export const User = styled.div `
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    box-shadow: 0px 20px 30px #00000014;
+    padding: 1em 0em;
+`
+
+export const UserImg = styled.img `
+    width: 4.375em;
+    height: 4.375em;
+    transform: translateY(-25%);
+`
+
+export const UserName = styled.p `
+    color: #393939;
+    color: ${props => props.$title ? '#393939' : '#B2B2B2;'};
+    font-size: ${props => props.$title ? '1em' : '0.75em;'};
+    margin:0;
+    padding-bottom:1.2em;
+`
+
+export const UserButton = styled.button `
+    background-color: #EBF1EF;
+    color: #135846;
+    margin-bottom: 1.5em;
+    padding: 1em 3em;
+    border: none;
+    border-radius: 0.8px;
+    cursor: pointer;
+
+`
+
 export const Footer = styled.div `
     text-align: center;
-    margin-top: 3.5em;
-    padding-left: 3.5em;
+    margin-top: 3em;
 `
 
 export const TitleFooter = styled.p `
@@ -82,7 +114,7 @@ export const SubtitleFooter = styled.p `
     color: #799283;
     font-size: 0.875em;
     font-weight: 300;
-    padding-bottom: 3.5em;
+    padding-bottom: 3em;
 `
 
 export const Header = styled.div `
