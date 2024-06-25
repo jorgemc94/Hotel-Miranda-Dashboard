@@ -4,13 +4,20 @@ import { HiMenuAlt2, HiMenuAlt3 } from "react-icons/hi";
 import { SlBell, SlEnvolope, SlLogout } from "react-icons/sl";
 import { ImContrast } from "react-icons/im";
 import '../../styles.css';
+import { useNavigate } from "react-router-dom";
 
 export const NavbarComponent = () => {
     const [menuDisabled, setMenuDisabled] = useState(true);
+    const navigate = useNavigate();
 
     const toggleMenu = () => {
         setMenuDisabled(!menuDisabled);
     };
+
+    const HandlerLogoOut = () => {
+        localStorage.setItem('login','false');
+        navigate('/login');
+    }
 
     return (
         <Nav>
@@ -35,7 +42,7 @@ export const NavbarComponent = () => {
                 <Icons>
                     <SlEnvolope className="icons"/>
                     <SlBell className="icons"/>
-                    <SlLogout className="icons"/>
+                    <SlLogout onClick={HandlerLogoOut} className="icons"/>
                     <ImContrast className="icons"/>
                 </Icons>
             </ContentNavbar>
