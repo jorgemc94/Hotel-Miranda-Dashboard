@@ -1,4 +1,4 @@
-import { Header, Menu, MenuLogo, Nav, ImageMenu, TextMenu, TextLogo, TextHeader, TitleText, IconsHeader, Navigation, NavigationLink } from "./NavbarStyled";
+import { Header, Menu, MenuLogo, Nav, ImageMenu, TextMenu, TextLogo, TextHeader, TitleText, IconsHeader, Navigation, NavigationLink, Footer, TitleFooter, SubtitleFooter } from "./NavbarStyled";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../styles.css';
@@ -55,6 +55,11 @@ export const NavbarComponent = () => {
                         <p>Users</p>
                     </NavigationLink>
                 </Navigation>
+                <Footer>
+                    <TitleFooter>Travl Hotel Admin Dashboard</TitleFooter>
+                    <SubtitleFooter>© 2024 All Rights Reserved</SubtitleFooter>
+                    <SubtitleFooter>Made with Jorge Macias Cordobés</SubtitleFooter>
+                </Footer>
             </Menu>
             <Header $menuOpen={!menuDisabled}>
                 <TextHeader>
