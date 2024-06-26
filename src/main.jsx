@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './styles.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { LoginPage } from './Pages/Login/LoginPage'
-import { NavbarComponent } from './Components/NavbarComponent/NavbarComponent'
+import { LayoutPage } from './Pages/Layout/LayoutPage'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
       <Route path='/login' element={<LoginPage/>}/>
-      <Route path='/' element={<NavbarComponent/>}>
+      <Route path='/' element={<LayoutPage/>}>
       </Route>
       </Routes>
     </BrowserRouter>
