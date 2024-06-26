@@ -1,26 +1,5 @@
-
 import styled from "styled-components";
 
-
-export const Nav = styled.div `
-    width: 100%;
-    min-height: 100vh;
-    height: 100%;
-    display: grid;
-    grid-template:
-        "menu header" 0.01fr
-        "menu content" 1fr / 20% 80%;
-`
-
-export const Menu = styled.div `
-    grid-area: menu;
-    width: 100%;
-    padding: 0rem;
-    margin: 0rem;
-    display: ${props => props.$disable ? 'none' : 'block'};
-    box-shadow: 13px 3px 40px #00000005;
-    background-color: #FFF;
-`
 
 export const MenuLogo = styled.div `
     display: flex;
@@ -99,52 +78,20 @@ export const UserButton = styled.button `
 
 `
 
-export const Footer = styled.div `
+export const MenuFooter = styled.div `
     text-align: center;
     margin-top: 3em;
 `
 
-export const TitleFooter = styled.p `
+export const MenuFooterTitle = styled.p `
     color: #212121;
     font-weight: 600;
 
 `
 
-export const SubtitleFooter = styled.p `
+export const MenuFooterSubtitle = styled.p `
     color: #799283;
     font-size: 0.875em;
     font-weight: 300;
     padding-bottom: 3em;
 `
-
-export const Header = styled.div `
-    grid-area: header;
-    grid-column: ${props => props.$menuOpen ? 'span 1' : 'span 2'};
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 91px;
-    box-shadow: 0px 3px 10px #00000005;
-    background-color: #FFF;
-`
-
-export const TextHeader = styled.div`
-    padding: 1em;
-    padding-left: 2em;
-`;
-
-export const TitleText = styled.h1`
-    color: #262626;
-    font-size: 1.75em;
-    font-weight: 600;
-    display: inline-block;
-    padding-left: 1em;
-`;
-
-export const IconsHeader = styled.div`
-    display: flex;
-    gap: 2em;
-    justify-content: flex-end;
-    padding-right: 2em;
-    align-items: center;
-`;
