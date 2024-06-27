@@ -1,8 +1,9 @@
-import { MenuFooter, MenuFooterTitle, MenuFooterSubtitle, MenuLogo, ImageMenu, TextMenu, TextLogo, Navigation, NavigationLink, User, UserImg, UserName, UserButton } from "./MenuStyled";
-import { MdOutlineDashboard } from "react-icons/md";
+import { MenuFooter, MenuFooterTitle, MenuFooterSubtitle, MenuLogo, ImageMenu, TextMenu, TextLogo, User, UserImg, UserName, UserButton, NavLinkStyle, NavigationList, NavigationItem } from "./MenuStyled";
+import { MdOutlineDashboard, MdOutlineContactMail } from "react-icons/md";
 import { TfiKey } from "react-icons/tfi";
 import { LuCalendarCheck2 } from "react-icons/lu";
-import { HiOutlinePuzzle } from "react-icons/hi";
+import { FaRegUser } from "react-icons/fa";
+
 
 export const MenuComponent = () => {
     return (
@@ -14,24 +15,38 @@ export const MenuComponent = () => {
                     <TextLogo>Hotel Admin Dashboard</TextLogo>
                 </TextMenu>
             </MenuLogo>
-            <Navigation>
-                <NavigationLink>
-                    <MdOutlineDashboard className="icons icons--link" />
-                    <p>Dashboard</p>
-                </NavigationLink>
-                <NavigationLink>
-                    <TfiKey className="icons icons--link" />
-                    <p>Room</p>
-                </NavigationLink>
-                <NavigationLink>
-                    <LuCalendarCheck2 className="icons icons--link" />
-                    <p>Bookings</p>
-                </NavigationLink>
-                <NavigationLink>
-                    <HiOutlinePuzzle className="icons icons--link" />
-                    <p>Users</p>
-                </NavigationLink>
-            </Navigation>
+            <NavigationList>
+                <NavLinkStyle to={'/'}>
+                    <NavigationItem >
+                        <MdOutlineDashboard className="icons icons--link" />
+                        Dashboard
+                    </NavigationItem>
+                </NavLinkStyle>
+                <NavLinkStyle to={'/rooms'}>
+                    <NavigationItem>
+                        <TfiKey className="icons icons--link" />
+                        Rooms
+                    </NavigationItem>
+                </NavLinkStyle>
+                <NavLinkStyle to={'/bookings'}>
+                    <NavigationItem>
+                        <LuCalendarCheck2 className="icons icons--link" />
+                        Bookings
+                    </NavigationItem>
+                </NavLinkStyle>
+                <NavLinkStyle to={'/users'}>
+                    <NavigationItem>
+                        <FaRegUser  className="icons icons--link" />
+                        Users
+                    </NavigationItem>
+                </NavLinkStyle>
+                <NavLinkStyle to={'/contact'}>
+                    <NavigationItem>
+                        <MdOutlineContactMail  className="icons icons--link" />
+                        Contact
+                    </NavigationItem>
+                </NavLinkStyle>
+            </NavigationList>
             <User>
                 <UserImg src="src/assets/jorge.png"></UserImg>
                 <UserName $title={true}>Jorge Macias Cordobés</UserName>
