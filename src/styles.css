@@ -20,3 +20,11 @@ body {
     margin-right: 1.625em;
     color: #799283;
 }
+
+.KPIicon {
+    background-color: #FFEDEC;
+    padding: 1.5em;
+    color: #E23428;
+    width: 1.5625em;
+    height: 1.25em;
+}
