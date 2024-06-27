@@ -44,7 +44,7 @@ export const LayoutPage = () => {
             <LayoutHeader>
                 <HeaderComponent toggleMenu={toggleMenu} menuDisabled={menuDisabled} title={pageTitle}/>
             </LayoutHeader>
-            <LayoutContent $menuOpen={!menuDisabled}>
+            <LayoutContent $menuOpen={menuDisabled}>
                 <Outlet/>
             </LayoutContent>
         </LayoutGrid>

@@ -32,6 +32,7 @@ export const LayoutHeader = styled.div `
 
 export const LayoutContent = styled.section `
     grid-area: content;
+    grid-column: ${props => props.$menuOpen ? 'span 1' : 'span 2'};
     min-height: calc(100% - 91px);
     padding: 2em;
 `
