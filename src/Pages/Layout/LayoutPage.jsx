@@ -21,7 +21,7 @@ export const LayoutPage = () => {
             case '/rooms':
                 setPageTitle('Rooms');
                 break;
-            case '/bookins':
+            case '/bookings':
                 setPageTitle('Bookings');
             case '/users':
                 setPageTitle('Users');
