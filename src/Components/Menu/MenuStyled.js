@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 
@@ -22,26 +23,30 @@ export const TextLogo = styled.span`
     font-weight: ${props => props.$title ? 700 : 400};
 `;
 
-export const Navigation = styled.div `
+export const NavLinkStyle =styled(NavLink) `
+    text-decoration: none;
+    color: #135846;
+
+     &.active {
+        color: #E23428;
+    }
+`
+
+export const NavigationList = styled.ul `
     display: flex;
     flex-direction: column;
     margin: 2em 0em;
     color: #799283;
     padding-left: 3.5em;
+    text-decoration: none;
 `
 
-export const NavigationLink = styled.div `
+export const NavigationItem = styled.li `
     display: flex;
     align-items: center;
     padding-left: 3.5em;
     cursor: pointer;
-    margin-bottom: 2.5em;
-    color: ${props => props.$selected ? '#E23428' : 'inherit'};
-    border-left:  2px ${props => props.$selected ? '#E23428' : 'inherit'} solid;
-    p {
-        margin: 0;
-        font-size: 1.125em;
-    }
+    padding-bottom: 2.5em;
     
 `;
 
