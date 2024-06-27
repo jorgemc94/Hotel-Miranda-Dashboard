@@ -23,10 +23,13 @@ export const LayoutPage = () => {
                 break;
             case '/bookings':
                 setPageTitle('Bookings');
+                break;
             case '/users':
                 setPageTitle('Users');
+                break;
             case '/contact':
                 setPageTitle('Contact')
+                break;
             default:
                 setPageTitle('');
                 break;
