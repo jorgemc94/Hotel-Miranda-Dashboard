@@ -1,11 +1,9 @@
+import { Table } from "./TableStyled"
 
-
-export const TableComponent = () => {
-
-
+export const TableComponent = ({ columns, data }) => {
     return (
         <>
-            <table>
+            <Table>
                 <thead>
                     <tr>
                         {columns.map((column, index) => (
@@ -13,18 +11,18 @@ export const TableComponent = () => {
                         ))}
                     </tr>
                 </thead>
-                {data.map((row) => (
-                    <tbody key={row.id}>
-                        <tr >
+                <tbody>
+                    {data.map((row) => (
+                        <tr key={row.id}>
                             {columns.map((col, colIndex) => (
                                 <td key={colIndex}>
                                     {col.columnRenderer ? col.columnRenderer(row) : row[col.columnsData]}
                                 </td>
                             ))}
                         </tr>
-                    </tbody>
-                ))}
-            </table>
+                    ))}
+                </tbody>
+            </Table>
         </>
     )
 }

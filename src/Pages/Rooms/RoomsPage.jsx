@@ -1,3 +1,8 @@
+import { RoomsComponent } from "../../Components/Rooms/RoomsComponent"
+import { ButtonStyled } from "../../styled/ButtonStyled"
+import { ItemList, List } from "../../styled/LinkStyled"
+import { SelectStyled } from "../../styled/SelectStyled"
+import { SectionOrder } from "./RoomsStyled"
 
 
 export const RoomsPage = () => {
@@ -5,6 +10,20 @@ export const RoomsPage = () => {
 
     return (
         <>
+        <SectionOrder>
+            <List>
+                <ItemList>All Rooms</ItemList>
+            </List>
+            <ButtonStyled styled='send'>+ New Room</ButtonStyled>
+            <SelectStyled>
+                <option>Room Number</option>
+                <option>Available</option>
+                <option>Booked</option>
+                <option>Price Highest to Lowest</option>
+                <option>Price Lowest to Highest</option>
+            </SelectStyled>
+        </SectionOrder>
+        <RoomsComponent />
         </>
     )
 }
