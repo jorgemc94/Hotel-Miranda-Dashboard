@@ -1,0 +1,202 @@
+[
+    {
+      "foto": "https://sarahclaysocial.com/wp-content/uploads/2020/10/sarah-clay-3.jpg",
+      "name": "Juan Pérez",
+      "id": "001",
+      "startDate": "2021-01-15",
+      "description": "Desarrollador de software",
+      "email": "juan.perez@example.com",
+      "contact": "+34 600 123 456 789",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://sb.kaleidousercontent.com/67418/1920x1282/7978bca0ba/christina-wocintechchat-com-50tkcap8m3a-unsplash.jpg",
+      "name": "María Gómez",
+      "id": "002",
+      "startDate": "2020-03-22",
+      "description": "Gerente de proyecto",
+      "email": "maria.gomez@example.com",
+      "contact": "+34 600 654 321 789",
+      "status": "INACTIVE"
+    },
+    {
+      "foto": "https://sb.kaleidousercontent.com/67418/1920x1282/7978bca0ba/christina-wocintechchat-com-50tkcap8m3a-unsplash.jpg",
+      "name": "Carlos Ruiz",
+      "id": "003",
+      "startDate": "2019-07-01",
+      "description": "Analista de datos",
+      "email": "carlos.ruiz@example.com",
+      "contact": "+34 600 789 012 789",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
+      "name": "Ana Martínez",
+      "id": "004",
+      "startDate": "2021-02-18",
+      "description": "Especialista en marketing",
+      "email": "ana.martinez@example.com",
+      "contact": "+34 600 111 222 333",
+      "status": "ACTIVE"
+    },
+    {
+      "foto":  "https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg",
+      "name": "Pedro Sánchez",
+      "id": "005",
+      "startDate": "2020-11-25",
+      "description": "Diseñador gráfico",
+      "email": "pedro.sanchez@example.com",
+      "contact": "+34 600 444 555 666",
+      "status": "INACTIVE"
+    },
+    {
+      "foto": "https://retratosbarcelona.com/wp-content/uploads/2022/09/Retratos-Barcelona-Linkedin-Photo-Sydney.jpg",
+      "name": "Lucía Fernández",
+      "id": "006",
+      "startDate": "2021-06-10",
+      "description": "Recursos humanos",
+      "email": "lucia.fernandez@example.com",
+      "contact": "+34 600 777 888 999",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Alberto García",
+      "id": "007",
+      "startDate": "2019-09-05",
+      "description": "Contador",
+      "email": "alberto.garcia@example.com",
+      "contact": "+34 600 999 888 777",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Carmen López",
+      "id": "008",
+      "startDate": "2020-12-12",
+      "description": "Consultora",
+      "email": "carmen.lopez@example.com",
+      "contact": "+34 600 222 333 444",
+      "status": "INACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Jorge Herrera",
+      "id": "009",
+      "startDate": "2021-04-01",
+      "description": "Ingeniero de sistemas",
+      "email": "jorge.herrera@example.com",
+      "contact": "+34 600 555 666 777",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Laura Díaz",
+      "id": "010",
+      "startDate": "2020-07-20",
+      "description": "Desarrolladora web",
+      "email": "laura.diaz@example.com",
+      "contact": "+34 600 333 444 555",
+      "status": "INACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Fernando Ramírez",
+      "id": "011",
+      "startDate": "2021-05-15",
+      "description": "Gerente de ventas",
+      "email": "fernando.ramirez@example.com",
+      "contact": "+34 600 666 777 888",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Isabel Morales",
+      "id": "012",
+      "startDate": "2020-02-28",
+      "description": "Especialista en soporte",
+      "email": "isabel.morales@example.com",
+      "contact": "+34 600 888 999 000",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Ricardo Rojas",
+      "id": "013",
+      "startDate": "2019-11-10",
+      "description": "Asistente administrativo",
+      "email": "ricardo.rojas@example.com",
+      "contact": "+34 600 000 111 222",
+      "status": "INACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Patricia Torres",
+      "id": "014",
+      "startDate": "2020-08-15",
+      "description": "Gerente de producto",
+      "email": "patricia.torres@example.com",
+      "contact": "+34 600 111 222 333",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Francisco Vera",
+      "id": "015",
+      "startDate": "2021-03-22",
+      "description": "Desarrollador móvil",
+      "email": "francisco.vera@example.com",
+      "contact": "+34 600 222 333 444",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Gloria Álvarez",
+      "id": "016",
+      "startDate": "2020-10-10",
+      "description": "Analista financiero",
+      "email": "gloria.alvarez@example.com",
+      "contact": "+34 600 333 444 555",
+      "status": "INACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Héctor Castillo",
+      "id": "017",
+      "startDate": "2019-06-06",
+      "description": "Director de tecnología",
+      "email": "hector.castillo@example.com",
+      "contact": "+34 600 444 555 666",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Julia Serrano",
+      "id": "018",
+      "startDate": "2021-09-18",
+      "description": "Especialista en SEO",
+      "email": "julia.serrano@example.com",
+      "contact": "+34 600 555 666 777",
+      "status": "INACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Roberto Navarro",
+      "id": "019",
+      "startDate": "2020-01-20",
+      "description": "Consultor de TI",
+      "email": "roberto.navarro@example.com",
+      "contact": "+34 600 666 777 888",
+      "status": "ACTIVE"
+    },
+    {
+      "foto": "https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg?w=740",
+      "name": "Sara Ortiz",
+      "id": "020",
+      "startDate": "2019-03-25",
+      "description": "Especialista en contenidos",
+      "email": "sara.ortiz@example.com",
+      "contact": "+34 600 777 888 999",
+      "status": "ACTIVE"
+    }
+  ]
