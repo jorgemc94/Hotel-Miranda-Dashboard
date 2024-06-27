@@ -3,7 +3,7 @@ import { HiMenuAlt2, HiMenuAlt3 } from "react-icons/hi";
 import { SlBell, SlEnvolope, SlLogout } from "react-icons/sl";
 import { ImContrast } from "react-icons/im";
 
-export const HeaderComponent = ({ toggleMenu, menuDisabled }) => {
+export const HeaderComponent = ({ toggleMenu, menuDisabled, title }) => {
     
 
     return (
@@ -14,7 +14,7 @@ export const HeaderComponent = ({ toggleMenu, menuDisabled }) => {
                 ) : (
                     <HiMenuAlt2 className="icons" onClick={toggleMenu} />
                 )}
-                <TitleText>Dashboard</TitleText>
+                <TitleText>{title}</TitleText>
             </TextHeader>
             <IconsHeader>
                 <SlEnvolope className="icons" />
