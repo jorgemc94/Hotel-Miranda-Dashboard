@@ -28,7 +28,8 @@ export const LayoutPage = () => {
             case '/contact':
                 setPageTitle('Contact')
             default:
-                setPageTitle('Default Title');
+                setPageTitle('');
+                break;
         }
     },[location])
 
@@ -38,7 +39,7 @@ export const LayoutPage = () => {
                 <MenuComponent />
             </LayoutMenu>
             <LayoutHeader>
-                <HeaderComponent toggleMenu={toggleMenu} menuDisabled={menuDisabled} />
+                <HeaderComponent toggleMenu={toggleMenu} menuDisabled={menuDisabled} title={pageTitle}/>
             </LayoutHeader>
             <LayoutContent $menuOpen={!menuDisabled}>
                 <Outlet/>
