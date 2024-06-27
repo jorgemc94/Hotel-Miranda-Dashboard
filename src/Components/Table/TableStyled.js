@@ -4,6 +4,8 @@ export const Table = styled.table `
     width: 100%;
     background-color: #FFF;
     color: #393939;
+    margin-top: 3em;
+    padding: 1em;
 `
 
 export const SubtitleTable = styled.p `
@@ -22,6 +24,7 @@ export const NameTable = styled.div `
 `
 
 export const ImageTable = styled.img `
+    text-align: center;
     ${props => {
         switch (props.styled) {
             case 'rooms':
