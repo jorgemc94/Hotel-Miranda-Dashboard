@@ -9,7 +9,7 @@ import { RoomsPage } from './Pages/Rooms/RoomsPage'
 import { UsersPage } from './Pages/Users/UsersPage'
 import { ContactPage } from './Pages/Contact/ContactPage'
 import { BookingsPage } from './Pages/Bookings/BookingsPage'
-import { PrivateRoute } from './Private/PrivateRoute'
+import { PrivateRoute } from '../src/Components/Private/PrivateRoute'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

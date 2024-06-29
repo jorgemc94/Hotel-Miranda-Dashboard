@@ -1,5 +1,5 @@
 import { ContentTable, PaginationTable, TableStyled } from "./TableStyled";
-import { ButtonStyled } from "../../styled/ButtonStyled";
+import { ButtonStyled } from "../styled/ButtonStyled";
 import { useState } from "react";
 
 export const TableComponent = ({ columns, data }) => {

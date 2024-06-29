@@ -1,5 +1,5 @@
 
-import data from '../../data/rooms.json';
+import data from '../data/rooms.json';
 import { TableComponent } from '../Table/TableComponent';
 import { ImageTable } from '../Table/TableStyled';
 

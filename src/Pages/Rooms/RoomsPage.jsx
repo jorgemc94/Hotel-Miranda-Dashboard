@@ -1,7 +1,7 @@
 import { RoomsComponent } from "../../Components/Rooms/RoomsComponent"
-import { ButtonStyled } from "../../styled/ButtonStyled"
-import { ItemList, List } from "../../styled/LinkStyled"
-import { SelectStyled } from "../../styled/SelectStyled"
+import { ButtonStyled } from "../../Components/styled/ButtonStyled"
+import { ItemList, List } from "../../Components/styled/LinkStyled"
+import { SelectStyled } from "../../Components/styled/SelectStyled"
 import { SectionOrder } from "./RoomsStyled"
 
 
