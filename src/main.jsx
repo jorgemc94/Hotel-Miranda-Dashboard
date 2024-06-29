@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { LoginPage } from './Pages/Login/LoginPage'
 import { LayoutPage } from './Pages/Layout/LayoutPage'
 import { DashboardPage } from './Pages/Dashboard/DashboardPage'
-import { RoomsPage } from './Pages/Rooms/RoomsPage'
+import { RoomsListPage } from './Pages/Rooms/RoomsPage'
 import { UsersPage } from './Pages/Users/UsersPage'
 import { ContactPage } from './Pages/Contact/ContactPage'
 import { BookingsPage } from './Pages/Bookings/BookingsPage'
@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             path='/rooms' 
             element={
               <PrivateRoute>
-                <RoomsPage />
+                <RoomsListPage />
               </PrivateRoute>
             } 
           />
