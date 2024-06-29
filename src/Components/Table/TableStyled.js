@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Table = styled.table `
+export const TableStyled = styled.table `
     width: 100%;
     background-color: #FFF;
     color: #393939;
@@ -23,14 +23,18 @@ export const NameTable = styled.div `
 
 `
 
+export const ContentTable = styled.td `
+    padding: 0.5em 1em;
+`
+
 export const ImageTable = styled.img `
     text-align: center;
     ${props => {
         switch (props.styled) {
             case 'rooms':
                 return `
-                    height: 9.375em;
-                    width: 4.8125em;
+                    width: 9.375em;
+                    height: 4.8125em;
                 `
             case 'users':
                 return `
@@ -46,4 +50,12 @@ export const ImageTable = styled.img `
     }
         
     }
+`
+
+export const PaginationTable = styled.div `
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 2em;
+    margin-top: 1em;
 `
