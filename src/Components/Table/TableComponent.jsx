@@ -1,6 +1,6 @@
 import { ContentTable, PaginationTable, TableStyled } from "./TableStyled";
 import { ButtonStyled } from "../styled/ButtonStyled";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const TableComponent = ({ columns, data }) => {
     const pageSize = 5;
@@ -22,6 +22,11 @@ export const TableComponent = ({ columns, data }) => {
     const handleNext = () => {
         num + 1 < pages.length && setNum(num + 1);
     };
+
+    useEffect(() => {
+        setPages(createPagination(data, pageSize));
+        setNum(0); 
+    }, [data]);
 
     return (
         <>
