@@ -15,7 +15,7 @@ export const SubtitleTable = styled.p `
 
 export const PriceTable = styled.span `
     color: ${props => props.$price ? '#212121;' : '#799283'};
-    font-size: ${props => props.$price ? '1em' : '0.875em'};
+    font-size: ${props => props.$price ? '1em' : '1.2emem'};
 `
 
 export const NameTable = styled.div `
