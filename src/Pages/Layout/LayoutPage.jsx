@@ -1,15 +1,40 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { LayoutContent, LayoutGrid, LayoutHeader, LayoutMenu } from "./LayoutStyled";
 import { MenuComponent } from "../../Components/Menu/MenuComponent";
 import { HeaderComponent } from "../../Components/Header/HeaderComponent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const LayoutPage = () => {
     const [menuDisabled, setMenuDisabled] = useState(false);
+    const [pageTitle, setPageTitle] = useState("Default Title");
+    const location = useLocation();
 
     const toggleMenu = () => {
         setMenuDisabled(!menuDisabled);
     };
+
+    useEffect(() => {
+        switch(location.pathname) {
+            case '/':
+                setPageTitle('Dashboard');
+                break;
+            case '/rooms':
+                setPageTitle('Rooms');
+                break;
+            case '/bookings':
+                setPageTitle('Bookings');
+                break;
+            case '/users':
+                setPageTitle('Users');
+                break;
+            case '/contact':
+                setPageTitle('Contact')
+                break;
+            default:
+                setPageTitle('');
+                break;
+        }
+    },[location])
 
     return (
         <LayoutGrid>
@@ -17,9 +42,9 @@ export const LayoutPage = () => {
                 <MenuComponent />
             </LayoutMenu>
             <LayoutHeader>
-                <HeaderComponent toggleMenu={toggleMenu} menuDisabled={menuDisabled} />
+                <HeaderComponent toggleMenu={toggleMenu} menuDisabled={menuDisabled} title={pageTitle}/>
             </LayoutHeader>
-            <LayoutContent $menuOpen={!menuDisabled}>
+            <LayoutContent $menuOpen={menuDisabled}>
                 <Outlet/>
             </LayoutContent>
         </LayoutGrid>
