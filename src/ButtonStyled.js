@@ -6,7 +6,7 @@ export const ButtonStyled = styled.button `
     border-radius: 0.4em;
     cursor: pointer;
     border: none;
-    height: 3em
+    height: 3em;
 
     ${props => {
         switch (props.styled) {
