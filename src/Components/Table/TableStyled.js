@@ -20,6 +20,7 @@ export const PriceTable = styled.span `
 
 export const NameTable = styled.div `
     display: flex;
+    flex-direction: column;
 
 `
 
