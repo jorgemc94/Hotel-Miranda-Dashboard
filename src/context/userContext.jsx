@@ -6,40 +6,36 @@ const getInitialState = () => {
         return JSON.parse(initialState);
     }
     return {
-        userName: null,
-        userEmail: null,
+        name: null,
+        email: null,
         isLoggedIn: false
     };
 };
 
 const userReducer = (state, action) => {
-    let newState = {};
     switch (action.type) {
         case "LOGIN":
-            newState = {
+            return {
                 ...state,
-                userName: action.payload.userName,
-                userEmail: action.payload.userEmail,
+                name: action.payload.name,
+                email: action.payload.email,
                 isLoggedIn: true
             };
-            return newState;
         case "LOGOUT":
-            newState = {
+            return {
                 ...state,
-                userName: null,
-                userEmail: null,
+                name: null,
+                email: null,
                 isLoggedIn: false
             };
-            return newState;
         case "EDITUSER":
-            newState = {
+            return {
                 ...state,
-                userName: action.payload.userName,
-                userEmail: action.payload.userEmail
+                name: action.payload.name,
+                email: action.payload.email
             };
-            return newState;
         default:
-            return { ...state };
+            return state;
     }
 };
 
@@ -49,9 +45,7 @@ export const UserContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(userReducer, getInitialState());
 
     useEffect(() => {
-        if (state) {
-            localStorage.setItem('auth', JSON.stringify(state));
-        }
+        localStorage.setItem('auth', JSON.stringify(state));
     }, [state]);
 
     return (

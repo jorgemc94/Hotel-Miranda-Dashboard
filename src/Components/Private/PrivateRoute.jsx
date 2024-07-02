@@ -1,7 +1,9 @@
-import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../../context/userContext';
 
 export const PrivateRoute = ({ children }) => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    return isLoggedIn ? children : <Navigate to="/login" />;
+    const { state } = useContext(UserContext);
+
+    return state.isLoggedIn ? children : <Navigate to="/login" />;
 };
