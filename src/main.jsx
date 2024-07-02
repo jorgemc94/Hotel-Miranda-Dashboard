@@ -10,55 +10,24 @@ import { UsersPage } from './Pages/Users/UsersPage'
 import { ContactPage } from './Pages/Contact/ContactPage'
 import { BookingsPage } from './Pages/Bookings/BookingsPage'
 import { PrivateRoute } from '../src/Components/Private/PrivateRoute'
+import { Store } from './App/store'
+import { Provider } from 'react-redux'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <Provider store={Store}>
     <BrowserRouter>
       <Routes>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/' element={<LayoutPage />}>
-          <Route 
-            path='/' 
-            element={
-              <PrivateRoute>
-                <DashboardPage />
-              </PrivateRoute>
-            } 
-          />
-          <Route 
-            path='/rooms' 
-            element={
-              <PrivateRoute>
-                <RoomsListPage />
-              </PrivateRoute>
-            } 
-          />
-          <Route 
-            path='/users' 
-            element={
-              <PrivateRoute>
-                <UsersPage />
-              </PrivateRoute>
-            } 
-          />
-          <Route 
-            path='/contact' 
-            element={
-              <PrivateRoute>
-                <ContactPage />
-              </PrivateRoute>
-            } 
-          />
-          <Route 
-            path='/bookings' 
-            element={
-              <PrivateRoute>
-                <BookingsPage />
-              </PrivateRoute>
-            } 
-          />
+          <Route path='/' element={<PrivateRoute> <DashboardPage /> </PrivateRoute> }/>
+          <Route path='/rooms' element={<PrivateRoute> <RoomsListPage /> </PrivateRoute> } />
+          <Route path='/users' element={<PrivateRoute> <UsersPage /> </PrivateRoute> } />
+          <Route path='/contact' element={<PrivateRoute> <ContactPage /> </PrivateRoute> } />
+          <Route path='/bookings' element={<PrivateRoute> <BookingsPage /> </PrivateRoute> } />
         </Route>
       </Routes>
     </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
 )
