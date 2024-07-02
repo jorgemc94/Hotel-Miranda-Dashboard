@@ -1,6 +1,4 @@
 import { ContentTable, PaginationTable, TableStyled } from "./TableStyled";
-import { ButtonStyled } from "../../styled/ButtonStyled";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ButtonStyled } from "../styled/ButtonStyled";
 import { useState, useEffect } from "react";
