@@ -2,14 +2,19 @@ import { TextHeader, TitleText, IconsHeader } from "./HeaderStyled";
 import { HiMenuAlt2, HiMenuAlt3 } from "react-icons/hi";
 import { SlBell, SlEnvolope, SlLogout } from "react-icons/sl";
 import { ImContrast } from "react-icons/im";
+import { useContext } from "react";
+import { UserContext } from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 
 export const HeaderComponent = ({ toggleMenu, menuDisabled, title }) => {
-    const navigate = useNavigate()
+    const { dispatch } = useContext(UserContext);
+    const navigate = useNavigate();
+
     
-    const LogOut = () => {
-        localStorage.removeItem('isLoggedIn', false);
-        navigate('/login');
+    const LogoutHandler = () => {
+       dispatch({type: 'LOGOUT'});
+       localStorage.removeItem('aut');
+       navigate('/login');
     }
 
     return (
@@ -25,7 +30,7 @@ export const HeaderComponent = ({ toggleMenu, menuDisabled, title }) => {
             <IconsHeader>
                 <SlEnvolope className="icons" />
                 <SlBell className="icons" />
-                <SlLogout onClick={LogOut} className="icons" />
+                <SlLogout onClick={LogoutHandler} className="icons" />
                 <ImContrast className="icons" />
             </IconsHeader>
         </>
