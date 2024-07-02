@@ -1,7 +1,12 @@
 import { ContentTable, PaginationTable, TableStyled } from "./TableStyled";
+<<<<<<< tableComponent
 import { ButtonStyled } from "../../styled/ButtonStyled";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+=======
+import { ButtonStyled } from "../styled/ButtonStyled";
+import { useState, useEffect } from "react";
+>>>>>>> main
 
 export const TableComponent = ({ columns, data }) => {
     const pageSize = 5;
@@ -30,12 +35,15 @@ export const TableComponent = ({ columns, data }) => {
         setNum(0); 
     }, [data]);
 
+<<<<<<< tableComponent
     const clickDetailsHandle = (id) => {
         if (detailPage) {
             navigate(`${detailPage}/${id}`);
         }
     }
 
+=======
+>>>>>>> main
     return (
         <>
             <TableStyled>

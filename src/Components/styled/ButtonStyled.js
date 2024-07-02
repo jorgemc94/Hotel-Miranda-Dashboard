@@ -6,7 +6,7 @@ export const ButtonStyled = styled.button `
     border-radius: 0.4em;
     cursor: pointer;
     border: none;
-    height: 3em
+    height: 3em;
 
     ${props => {
         switch (props.styled) {
@@ -31,6 +31,12 @@ export const ButtonStyled = styled.button `
             case 'bookedRed':
                 return `
                     background-color : #E23428;
+                    color: #FFF;
+                    width: 7.815em;
+                `
+            case 'progress': 
+                return `
+                    background-color : #FF9C3A;
                     color: #FFF;
                     width: 7.815em;
                 `
