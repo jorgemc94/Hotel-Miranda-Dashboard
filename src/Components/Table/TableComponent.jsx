@@ -1,9 +1,16 @@
 import { ContentTable, PaginationTable, TableStyled } from "./TableStyled";
+<<<<<<< tableComponent
+import { ButtonStyled } from "../../styled/ButtonStyled";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+=======
 import { ButtonStyled } from "../styled/ButtonStyled";
 import { useState, useEffect } from "react";
+>>>>>>> main
 
 export const TableComponent = ({ columns, data }) => {
     const pageSize = 5;
+    const navigate = useNavigate();
 
     const createPagination = (array, size) => {
         const aux = [];
@@ -28,6 +35,15 @@ export const TableComponent = ({ columns, data }) => {
         setNum(0); 
     }, [data]);
 
+<<<<<<< tableComponent
+    const clickDetailsHandle = (id) => {
+        if (detailPage) {
+            navigate(`${detailPage}/${id}`);
+        }
+    }
+
+=======
+>>>>>>> main
     return (
         <>
             <TableStyled>
@@ -40,7 +56,7 @@ export const TableComponent = ({ columns, data }) => {
                 </thead>
                 <tbody>
                     {pages[num]?.map((row) => (
-                        <tr key={row.id}>
+                        <tr key={row.id} onClick={clickDetailsHandle(row.id)}>
                             {columns.map((col, colIndex) => (
                                 <ContentTable key={colIndex}>
                                     {col.columnRenderer ? col.columnRenderer(row) : row[col.columnsData]}
