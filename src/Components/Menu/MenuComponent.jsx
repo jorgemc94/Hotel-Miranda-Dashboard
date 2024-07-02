@@ -1,11 +1,19 @@
+import { useState, useContext } from 'react';
 import { MenuFooter, MenuFooterTitle, MenuFooterSubtitle, MenuLogo, ImageMenu, TextMenu, TextLogo, User, UserImg, UserName, UserButton, NavLinkStyle, NavigationList, NavigationItem } from "./MenuStyled";
 import { MdOutlineDashboard, MdOutlineContactMail } from "react-icons/md";
 import { TfiKey } from "react-icons/tfi";
 import { LuCalendarCheck2 } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
-
+import { UserContext } from '../../context/userContext';
+import {PopupComponent} from '../Popup/PopupComponent';
 
 export const MenuComponent = () => {
+    const { state } = useContext(UserContext);
+    const [isModalActive, setIsModalActive] = useState(false);
+
+    const openModal = () => setIsModalActive(true);
+    const closeModal = () => setIsModalActive(false);
+
     return (
         <>
             <MenuLogo>
@@ -36,28 +44,31 @@ export const MenuComponent = () => {
                 </NavLinkStyle>
                 <NavLinkStyle to={'/users'}>
                     <NavigationItem>
-                        <FaRegUser  className="icons icons--link" />
+                        <FaRegUser className="icons icons--link" />
                         Users
                     </NavigationItem>
                 </NavLinkStyle>
                 <NavLinkStyle to={'/contact'}>
                     <NavigationItem>
-                        <MdOutlineContactMail  className="icons icons--link" />
+                        <MdOutlineContactMail className="icons icons--link" />
                         Contact
                     </NavigationItem>
                 </NavLinkStyle>
             </NavigationList>
             <User>
                 <UserImg src="src/assets/jorge.png"></UserImg>
-                <UserName $title={true}>Jorge Macias Cordobés</UserName>
-                <UserName>jorgemc1294@gmail.com</UserName>
-                <UserButton>Contact Us</UserButton>
+                <UserName $title={true}>{state.name}</UserName>
+                <UserName>{state.email}</UserName>
+                <UserButton onClick={openModal}>Contact Us</UserButton>
             </User>
             <MenuFooter>
                 <MenuFooterTitle>Travl Hotel Admin Dashboard</MenuFooterTitle>
                 <MenuFooterSubtitle>© 2024 All Rights Reserved</MenuFooterSubtitle>
                 <MenuFooterSubtitle>Made with Jorge Macias Cordobés</MenuFooterSubtitle>
             </MenuFooter>
+
+            <PopupComponent isActive={isModalActive} onClose={closeModal} />
         </>
     );
 };
+
