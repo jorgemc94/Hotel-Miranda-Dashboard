@@ -35,15 +35,13 @@ export const TableComponent = ({ columns, data }) => {
         setNum(0); 
     }, [data]);
 
-<<<<<<< tableComponent
+
     const clickDetailsHandle = (id) => {
         if (detailPage) {
             navigate(`${detailPage}/${id}`);
         }
     }
 
-=======
->>>>>>> main
     return (
         <>
             <TableStyled>
