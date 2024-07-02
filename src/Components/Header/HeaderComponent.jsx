@@ -13,7 +13,7 @@ export const HeaderComponent = ({ toggleMenu, menuDisabled, title }) => {
     
     const LogoutHandler = () => {
        dispatch({type: 'LOGOUT'});
-       localStorage.removeItem('aut');
+       localStorage.removeItem('auth');
        navigate('/login');
     }
 
