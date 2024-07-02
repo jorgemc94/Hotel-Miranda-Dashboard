@@ -10,14 +10,13 @@ import { UsersPage } from './Pages/Users/UsersPage'
 import { ContactPage } from './Pages/Contact/ContactPage'
 import { BookingsPage } from './Pages/Bookings/BookingsPage'
 import { PrivateRoute } from '../src/Components/Private/PrivateRoute'
-import { Store } from './App/store'
-import { Provider } from 'react-redux'
+
 import { UserContextProvider } from './context/userContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <UserContextProvider>
-      <Provider store={Store}>
+      
         <BrowserRouter>
           <Routes>
             <Route path='/login' element={<LoginPage />} />
@@ -30,7 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             </Route>
           </Routes>
         </BrowserRouter>
-      </Provider>
+      
     </UserContextProvider>
   </React.StrictMode>,
 )
