@@ -104,7 +104,7 @@ export const UsersPage = () => {
                     </SelectStyled>
                 </SectionOrder>
             }
-            <TableComponent columns={columns} data={users} />
+            <TableComponent columns={columns} data={users} detailPage='/user' />
         </>  
     );
 };
