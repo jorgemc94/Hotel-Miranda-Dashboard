@@ -25,6 +25,10 @@ export const UsersSlice = createSlice({
             if (index !== -1) {
                 state.users[index] = action.payload;
             }
+        },
+
+        detailsUser: (state, action) => {
+            state.user = state.users.find((us) => us.id === action.payload);
         }
     },
     extraReducers: (builder) => {
@@ -47,4 +51,4 @@ export const getUsersList = (state) => state.users.users;
 export const getUser = (state) => state.users.user;
 export const getUsersStatus = (state) => state.users.status;
 export const getUsersError = (state) => state.users.error;
-export const {addUser, editUser, deleteUser} = UsersSlice.actions;
+export const {addUser, editUser, deleteUser, detailsUser} = UsersSlice.actions;
