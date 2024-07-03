@@ -36,6 +36,10 @@ export const TableComponent = ({ columns, data, detailPage }) => {
         }
     };
 
+    const stopPropagation = (event) => {
+        event.stopPropagation();
+    };
+
     return (
         <>
             <TableStyled>
@@ -50,7 +54,10 @@ export const TableComponent = ({ columns, data, detailPage }) => {
                     {pages[num]?.map((row) => (
                         <tr key={row.id} onClick={() => clickDetailsHandle(row.id)}>
                             {columns.map((col, colIndex) => (
-                                <ContentTable key={colIndex}>
+                                <ContentTable 
+                                    key={colIndex} 
+                                    onClick={col.headerColumn === 'Actions' ? stopPropagation : undefined}
+                                >
                                     {col.columnRenderer ? col.columnRenderer(row) : row[col.columnsData]}
                                 </ContentTable>
                             ))}

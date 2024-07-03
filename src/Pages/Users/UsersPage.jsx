@@ -7,8 +7,12 @@ import data from "../../Components/data/users.json";
 import { ImageTable, SubtitleTable } from "../../Components/Table/TableStyled";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersStatus, getUsersError, getUsersList } from "../../Features/users/usersSlice";
+import { getUsersStatus, getUsersError, getUsersList, deleteUser } from "../../Features/users/usersSlice";
 import { UsersThunk } from "../../Features/users/usersThunk";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { CiEdit } from "react-icons/ci";
+import Swal from 'sweetalert2'; 
+import { useNavigate } from "react-router-dom";
 
 export const UsersPage = () => {
     const [users, setUsers] = useState(data);
@@ -18,6 +22,7 @@ export const UsersPage = () => {
     const dispatchRedux = useDispatch();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (usersStatus === 'idle') {
@@ -52,8 +57,43 @@ export const UsersPage = () => {
                 <ButtonStyled styled='bookedRed'>{row.status}</ButtonStyled>
             )
         )},
-        { headerColumn: 'Actions', columnsData: ''}
+        { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row) => {
+            return (
+                <>
+                    <RiDeleteBin6Line onClick={(event) => deleteHandle(event, row.id)} /> <CiEdit onClick={() => navigateHandle(row.id)} />
+                </>
+            )
+        }}
     ];
+
+    const deleteHandle = (event, userId) => {
+        event.stopPropagation();
+        
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+          }).then((result) => {
+            if (result.isConfirmed) {
+                dispatchRedux(deleteUser(userId)).then(() => {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                    setUsers(users.filter(user => user.id !== userId));
+                });
+            }
+          });
+    }
+
+    const navigateHandle = (userId) => {
+        navigate(`/user/edit/${userId}`);
+    };
 
     const sortUsersHandler = (value) => {
         let sortedUsers = [...users];
@@ -104,7 +144,7 @@ export const UsersPage = () => {
                     </SelectStyled>
                 </SectionOrder>
             }
-            <TableComponent columns={columns} data={users} detailPage='/user' />
+            <TableComponent columns={columns} data={users} detailPage='/user'/>
         </>  
     );
 };
