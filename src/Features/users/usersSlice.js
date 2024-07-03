@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UsersThunk } from "./usersThunk";
+import { UserDetailsThunk } from "./userDetailsThunk";
 
 const initialState = {
     error: null,
@@ -27,9 +28,7 @@ export const UsersSlice = createSlice({
             }
         },
 
-        detailsUser: (state, action) => {
-            state.user = state.users.find((us) => us.id === action.payload);
-        }
+
     },
     extraReducers: (builder) => {
         builder
@@ -43,6 +42,17 @@ export const UsersSlice = createSlice({
             .addCase(UsersThunk.fulfilled, (state, action) => {
                 state.status = 'fulfilled';
                 state.users = action.payload;
+            })
+            .addCase(UserDetailsThunk.pending, (state) => {
+                state.status = 'pending';
+            })
+            .addCase(UserDetailsThunk.rejected, (state, action) => {
+                state.status = 'rejected';
+                state.error = action.error.message;
+            })
+            .addCase(UserDetailsThunk.fulfilled, (state, action) => {
+                state.status = 'fulfilled';
+                state.user = action.payload;
             });
     }
 });
@@ -51,4 +61,4 @@ export const getUsersList = (state) => state.users.users;
 export const getUser = (state) => state.users.user;
 export const getUsersStatus = (state) => state.users.status;
 export const getUsersError = (state) => state.users.error;
-export const {addUser, editUser, deleteUser, detailsUser} = UsersSlice.actions;
+export const {addUser, editUser, deleteUser,resetState} = UsersSlice.actions;
