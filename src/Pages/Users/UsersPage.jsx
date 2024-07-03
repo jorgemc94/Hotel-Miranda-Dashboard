@@ -60,7 +60,7 @@ export const UsersPage = () => {
         { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row) => {
             return (
                 <>
-                    <RiDeleteBin6Line onClick={(event) => deleteHandle(event, row.id)} /> <CiEdit onClick={() => navigateHandle(row.id)} />
+                    <RiDeleteBin6Line onClick={(event) => deleteHandle(event, row.id)} /> <CiEdit onClick={() => navigateEditHandle(row.id)} />
                 </>
             )
         }}
@@ -91,7 +91,7 @@ export const UsersPage = () => {
           });
     }
 
-    const navigateHandle = (userId) => {
+    const navigateEditHandle = (userId) => {
         navigate(`/user/edit/${userId}`);
     };
 
@@ -128,6 +128,10 @@ export const UsersPage = () => {
         setUsers(filteredUsers);
     };
 
+    const navigateNewUserHandle = () => {
+        navigate('/user/newuser');
+    };
+
     return (
         <>
             {isLoading ? <p>...Loading...</p> : 
@@ -137,7 +141,7 @@ export const UsersPage = () => {
                         <ItemList onClick={handleClickActive}>Active Employee</ItemList>
                         <ItemList onClick={handleClickInactive}>Inactive Employee</ItemList>
                     </List>
-                    <ButtonStyled styled='send'>+ New User</ButtonStyled>
+                    <ButtonStyled styled='send' onClick={navigateNewUserHandle}>+ New User</ButtonStyled>
                     <SelectStyled onChange={handleSortChange}>
                         <option value='date'>Start Date</option>
                         <option value='name'>Full Name</option>

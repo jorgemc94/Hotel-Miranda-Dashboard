@@ -29,6 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <Route path='/users' element={<PrivateRoute> <UsersPage /> </PrivateRoute> } />
               <Route path='/user/:id' element={<PrivateRoute><UserDetailsPage /> </PrivateRoute>} />
               <Route path='/user/edit/:id' element={<PrivateRoute><UserEditPage /> </PrivateRoute>} />
+              <Route path='/user/newuser' element={<PrivateRoute><UserDetailsPage /> </PrivateRoute>} />
               <Route path='/contact' element={<PrivateRoute> <ContactPage /> </PrivateRoute> } />
               <Route path='/bookings' element={<PrivateRoute> <BookingsPage /> </PrivateRoute> } />
             </Route>
