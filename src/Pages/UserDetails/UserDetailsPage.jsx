@@ -58,41 +58,41 @@ export const UserDetailsPage = () => {
 
     return (
         <>
-            {isLoading ? 
-                <p>...loading...</p> : 
-                <>
-                    <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled> 
-                    <SectionDetails>
-                        <ContentDetails>
-                            <TextDetails $title>{user.name}</TextDetails>
-                            <TextDetails>{user.id}</TextDetails>
-                            <ContentText>
-                                <ContentTextDetails>
-                                    <TextDetails $title>Email</TextDetails>
-                                    <TextDetails>{user.email}</TextDetails>
-                                </ContentTextDetails>
-                                <ContentTextDetails $right>
-                                    <TextDetails $title>Contact</TextDetails>
-                                    <TextDetails>{user.phone}</TextDetails>
-                                </ContentTextDetails>
-                            </ContentText>
-                            <ContentText>
-                                <ContentTextDetails>
-                                    <TextDetails $title>Start Date</TextDetails>
-                                    <TextDetails>{user.date}</TextDetails>
-                                </ContentTextDetails>
-                                <ContentTextDetails $right>
-                                    <TextDetails $title>Status</TextDetails>
-                                    <TextDetails>{user.status === 'valid' ? <ButtonStyled styled='available'>Valid</ButtonStyled> : <ButtonStyled styled='bookedRed'>Invalid</ButtonStyled>}</TextDetails>
-                                </ContentTextDetails>
-                            </ContentText>
-                            <TextDetails $title>Description</TextDetails>
-                            <TextDetails>{user.position.description}</TextDetails>
-                        </ContentDetails>
-                        <ImageDetails src={user.photo} alt="img User" />
-                    </SectionDetails>
-                </>
-            }
+        {isLoading ? 
+            <p>...loading...</p> : 
+            <>
+                <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled> 
+                <SectionDetails>
+                    <ContentDetails>
+                        <TextDetails $title>{user.name}</TextDetails>
+                        <TextDetails>{user.id}</TextDetails>
+                        <ContentText>
+                            <ContentTextDetails>
+                                <TextDetails $title>Email</TextDetails>
+                                <TextDetails>{user.email}</TextDetails>
+                            </ContentTextDetails>
+                            <ContentTextDetails $right>
+                                <TextDetails $title>Contact</TextDetails>
+                                <TextDetails>{user.phone}</TextDetails>
+                            </ContentTextDetails>
+                        </ContentText>
+                        <ContentText>
+                            <ContentTextDetails>
+                                <TextDetails $title>Start Date</TextDetails>
+                                <TextDetails>{user.date}</TextDetails>
+                            </ContentTextDetails>
+                            <ContentTextDetails $right>
+                                <TextDetails $title>Status</TextDetails>
+                                <TextDetails>{user.status === 'valid' ? <ButtonStyled styled='available'>Valid</ButtonStyled> : <ButtonStyled styled='bookedRed'>Invalid</ButtonStyled>}</TextDetails>
+                            </ContentTextDetails>
+                        </ContentText>
+                        <TextDetails $title>Description</TextDetails>
+                        <TextDetails>{user.position.description}</TextDetails>
+                    </ContentDetails>
+                    <ImageDetails src={user.photo} alt="img User" />
+                </SectionDetails>
+            </>
+        }
 
         </>
     );
