@@ -13,6 +13,7 @@ export const SectionFormStyled = styled.section `
 export const ImageFormStyled = styled.img `
     width: 10em;
     height: 10em;
+    padding-bottom: 2em;
 `
 
 export const FormStyled = styled.form `

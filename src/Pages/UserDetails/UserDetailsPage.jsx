@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, getUsersError, getUsersStatus } from "../../Features/users/usersSlice";
+import { getUser, getUsersError, getUsersList, getUsersStatus } from "../../Features/users/usersSlice";
 import { UserDetailsThunk } from "../../Features/users/userDetailsThunk";
 import { useNavigate, useParams } from "react-router-dom";
 import { ContentDetails, ContentText, ImageDetails, SectionDetails, TextDetails, ContentTextDetails } from "./UserDetailsStyled";
@@ -17,6 +17,7 @@ export const UserDetailsPage = () => {
     const userStatus = useSelector(getUsersStatus);
     const usersError = useSelector(getUsersError);
     const [error, setError] = useState(null);
+    const usersList = useSelector(getUsersList);
 
     useEffect(() => {
         if (userStatus === 'idle') {
@@ -35,7 +36,7 @@ export const UserDetailsPage = () => {
 
     const initialFetch = async () => {
         try {
-            await dispatchRedux(UserDetailsThunk(id || '')).unwrap();
+            await dispatchRedux(UserDetailsThunk({id:id, usersList:usersList})).unwrap();
             setIsLoading(false);
         } catch (err) {
             setError(err);
@@ -61,6 +62,7 @@ export const UserDetailsPage = () => {
         {isLoading ? 
             <p>...loading...</p> : 
             <>
+
                 <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled> 
                 <SectionDetails>
                     <ContentDetails>
