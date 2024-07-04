@@ -172,7 +172,7 @@ export const RoomsListPage = () => {
                             <option value='highestPrice'>Price Lowest to Highest</option>
                         </SelectStyled>
                     </SectionOrder>
-                    <TableComponent columns={columns} data={rooms} />
+                    <TableComponent columns={columns} data={rooms} detailPage='/room'/>
                 </>
             }
            

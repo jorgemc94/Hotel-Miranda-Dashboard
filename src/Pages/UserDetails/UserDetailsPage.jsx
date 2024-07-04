@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUser, getUsersError, getUsersList, getUsersStatus } from "../../Features/users/usersSlice";
 import { UserDetailsThunk } from "../../Features/users/userDetailsThunk";
 import { useNavigate, useParams } from "react-router-dom";
-import { ContentDetails, ContentText, ImageDetails, SectionDetails, TextDetails, ContentTextDetails } from "./UserDetailsStyled";
+import { ContentDetails, ContentText, ImageDetails, SectionDetails, TextDetails, ContentTextDetails } from "../../Components/styled/DetailsStyled";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FiArrowLeft } from "react-icons/fi";
 

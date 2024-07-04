@@ -15,6 +15,7 @@ import { UserContextProvider } from './context/userContext'
 import { Store } from './App/store'
 import { UserDetailsPage } from './Pages/UserDetails/UserDetailsPage'
 import { UserEditPage } from './Pages/userEdit/userEditPage'
+import { RoomDetailsPage } from './Pages/RoomDetails/RoomDetails'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -27,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path='/' element={<LayoutPage />}>
               <Route path='/' element={<PrivateRoute> <DashboardPage /> </PrivateRoute> }/>
               <Route path='/rooms' element={<PrivateRoute> <RoomsListPage /> </PrivateRoute> } />
+              <Route path='/room/:id' element={<PrivateRoute><RoomDetailsPage /> </PrivateRoute>} />
               <Route path='/users' element={<PrivateRoute> <UsersPage /> </PrivateRoute> } />
               <Route path='/user/:id' element={<PrivateRoute><UserDetailsPage /> </PrivateRoute>} />
               <Route path='/user/edit/:id' element={<PrivateRoute><UserEditPage /> </PrivateRoute>} />
