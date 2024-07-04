@@ -12,9 +12,16 @@ export const UserEditPage = () => {
     const navigate = useNavigate();
     const dispatchRedux = useDispatch();
     const user = useSelector(getUser);
-    const usersStatus = useSelector(getUsersStatus);
-    const usersError = useSelector(getUsersError);
-    const [userEdit, setUserEdit] = useState({id: "", photo: "", name: "", email: "", phone: "", date: "", status: "", description: "" });
+    const [userEdit, setUserEdit] = useState({
+        id: "",
+        photo: "",
+        name: "",
+        email: "",
+        phone: "",
+        date: "",
+        status: "",
+        description: ""
+    });
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const usersList = useSelector(getUsersList);
@@ -22,19 +29,21 @@ export const UserEditPage = () => {
     const isEditPage = Boolean(id);
 
     useEffect(() => {
-        const fetchUserDetails = async () => {
-            if (isEditPage) {
+        if (isEditPage) {
+            const fetchUserDetails = async () => {
                 try {
-                    await dispatchRedux(UserDetailsThunk({id:id, usersList:usersList})).unwrap();
+                    await dispatchRedux(UserDetailsThunk({ id: id, usersList: usersList })).unwrap();
                 } catch (err) {
                     setError(err);
+                } finally {
+                    setIsLoading(false);
                 }
-            }
+            };
+            fetchUserDetails();
+        } else {
             setIsLoading(false);
-        };
-
-        fetchUserDetails();
-    }, [id, dispatchRedux, isEditPage]);
+        }
+    }, [id, dispatchRedux, isEditPage, usersList]);
 
     useEffect(() => {
         if (user && isEditPage) {
@@ -51,25 +60,6 @@ export const UserEditPage = () => {
         }
     }, [user, isEditPage]);
 
-    useEffect(() => {
-        if (usersStatus === 'idle') {
-            dispatchRedux(UserDetailsThunk(id));
-        } else if (usersStatus === 'fulfilled') {
-            setIsLoading(false);
-        } else if (usersStatus === 'rejected') {
-            setIsLoading(false);
-            setError(usersError);
-        }
-    }, [dispatchRedux, id, usersStatus, usersError]);
-
-    if (error) {
-        return <p>Error: {error.message || 'Something went wrong!'}</p>;
-    }
-
-    if (isEditPage && !user) {
-        return <p>No user found</p>;
-    }
-
     const handleChange = (event) => {
         const { name, value } = event.target;
         setUserEdit({ ...userEdit, [name]: value });
@@ -82,7 +72,10 @@ export const UserEditPage = () => {
             const updatedUser = { ...user, ...userEdit, position: { ...user.position, description: userEdit.description } };
             dispatchRedux(editUser(updatedUser));
         } else {
-            const newUser = { ...usersList, ...userEdit, position: { description: userEdit.description } };
+            const newUser = {
+                ...userEdit,
+                position: { description: userEdit.description }
+            };
             dispatchRedux(addUser(newUser));
             console.log(newUser);
         }
@@ -94,11 +87,12 @@ export const UserEditPage = () => {
         navigate('/users');
     };
 
-    const options = () => {
-        const options = [
-            { value: 'valid', label: 'Valid' },
-            { value: 'invalid', label: 'Invalid' }
-          ]
+    if (error) {
+        return <p>Error: {error.message}</p>;
+    }
+
+    if (isEditPage && !user) {
+        return <p>No user found</p>;
     }
 
     return (

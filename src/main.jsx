@@ -13,9 +13,9 @@ import { PrivateRoute } from '../src/Components/Private/PrivateRoute'
 import { Provider } from 'react-redux'
 import { UserContextProvider } from './context/userContext'
 import { Store } from './App/store'
-import { UserDetailsPage } from './Pages/UserDetails/UserDetailsPage'
-import { UserEditPage } from './Pages/userEdit/userEditPage'
-import { RoomDetailsPage } from './Pages/RoomDetails/RoomDetails'
+import { UserDetailsPage } from './Pages/Users/UserDetailsPage'
+import { UserEditPage } from './Pages/Users/userEditPage'
+import { RoomDetailsPage } from './Pages/Rooms/RoomDetails'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
