@@ -9,8 +9,8 @@ const delay = (data) => {
     });
 };
 
-export const RoomDetailsThunk = createAsyncThunk('user/getUser', async ({id, roomsList}) => {
-    const room = usersList.find((rooms) => rooms.id == id)
+export const RoomDetailsThunk = createAsyncThunk('room/getRoom', async ({id, roomsList}) => {
+    const room = roomsList.find((room) => room.id == id)
     console.log (room)
     return room
     
