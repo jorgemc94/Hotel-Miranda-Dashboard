@@ -1,41 +1,45 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { getUser, editUser, getUsersStatus, getUsersError } from "../../Features/users/usersSlice";
+import { getUser, editUser, getUsersStatus, getUsersError, addUser, getUsersList } from "../../Features/users/usersSlice";
 import { UserDetailsThunk } from "../../Features/users/userDetailsThunk";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FormStyled, ImageFormStyled, InputStyled, LabelStyled, SectionFormStyled, TextareaStyled } from "../../Components/styled/FormStyled";
 import { FiArrowLeft } from "react-icons/fi";
 
-
 export const UserEditPage = () => {
     const { id } = useParams();
-    const dispatchRedux = useDispatch();
     const navigate = useNavigate();
+    const dispatchRedux = useDispatch();
     const user = useSelector(getUser);
     const usersStatus = useSelector(getUsersStatus);
     const usersError = useSelector(getUsersError);
-    const [userEdit, setUserEdit] = useState({photo: "", name: "", email: "", phone: "", date: "", status: "", description: "" });
+    const [userEdit, setUserEdit] = useState({id: "", photo: "", name: "", email: "", phone: "", date: "", status: "", description: "" });
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const usersList = useSelector(getUsersList);
 
-    const initialFetch = async () => {
-        try {
-            await dispatchRedux(UserDetailsThunk(id || '')).unwrap();
-            setIsLoading(false);
-        } catch (err) {
-            setError(err);
-            setIsLoading(false);
-        }
-    };
+    const isEditPage = Boolean(id);
 
     useEffect(() => {
-        initialFetch();
-    }, [id, dispatchRedux]);
+        const fetchUserDetails = async () => {
+            if (isEditPage) {
+                try {
+                    await dispatchRedux(UserDetailsThunk({id:id, usersList:usersList})).unwrap();
+                } catch (err) {
+                    setError(err);
+                }
+            }
+            setIsLoading(false);
+        };
+
+        fetchUserDetails();
+    }, [id, dispatchRedux, isEditPage]);
 
     useEffect(() => {
-        if (user) {
+        if (user && isEditPage) {
             setUserEdit({
+                id: user.id,
                 photo: user.photo,
                 name: user.name,
                 email: user.email,
@@ -45,7 +49,7 @@ export const UserEditPage = () => {
                 description: user.position?.description || '',
             });
         }
-    }, [user]);
+    }, [user, isEditPage]);
 
     useEffect(() => {
         if (usersStatus === 'idle') {
@@ -56,13 +60,13 @@ export const UserEditPage = () => {
             setIsLoading(false);
             setError(usersError);
         }
-    },[dispatchRedux, id, usersStatus, usersError])
+    }, [dispatchRedux, id, usersStatus, usersError]);
 
     if (error) {
-        return <p>Error: {error.message}</p>;
+        return <p>Error: {error.message || 'Something went wrong!'}</p>;
     }
 
-    if (!user) {
+    if (isEditPage && !user) {
         return <p>No user found</p>;
     }
 
@@ -73,8 +77,16 @@ export const UserEditPage = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const updatedUser = { ...user, ...userEdit, position: { ...user.position, description: userEdit.description } };
-        dispatchRedux(editUser(updatedUser));
+
+        if (isEditPage) {
+            const updatedUser = { ...user, ...userEdit, position: { ...user.position, description: userEdit.description } };
+            dispatchRedux(editUser(updatedUser));
+        } else {
+            const newUser = { ...usersList, ...userEdit, position: { description: userEdit.description } };
+            dispatchRedux(addUser(newUser));
+            console.log(newUser);
+        }
+
         navigate('/users');
     };
 
@@ -82,32 +94,41 @@ export const UserEditPage = () => {
         navigate('/users');
     };
 
+    const options = () => {
+        const options = [
+            { value: 'valid', label: 'Valid' },
+            { value: 'invalid', label: 'Invalid' }
+          ]
+    }
+
     return (
         <>
             {isLoading ? <p>...Loading</p> : 
             <>
                 <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled> 
                 <SectionFormStyled>
-                    <ImageFormStyled src={userEdit.photo} alt="user photo" />
                     <FormStyled onSubmit={handleSubmit}>
+                        <ImageFormStyled src={userEdit.photo} alt="user photo" />
+                        <InputStyled type="file" accept="image/*" placeholder="Photo" />
+                        <LabelStyled>ID</LabelStyled>
+                        <InputStyled type="number" name="id" value={userEdit.id} onChange={handleChange} readOnly={isEditPage} placeholder="Id" />
                         <LabelStyled>Name</LabelStyled>
-                        <InputStyled name="name" value={userEdit.name} onChange={handleChange} placeholder="Name" />
+                        <InputStyled type="text" name="name" value={userEdit.name} onChange={handleChange} placeholder="Name" />
                         <LabelStyled>Email</LabelStyled>
-                        <InputStyled name="email" value={userEdit.email} onChange={handleChange} placeholder="Email" />
+                        <InputStyled type="email" name="email" value={userEdit.email} onChange={handleChange} placeholder="Email" />
                         <LabelStyled>Phone</LabelStyled>
-                        <InputStyled name="phone" value={userEdit.phone} onChange={handleChange} placeholder="Phone" />
+                        <InputStyled type="tel" name="phone" value={userEdit.phone} onChange={handleChange} placeholder="Phone" />
                         <LabelStyled>Start Date</LabelStyled>
-                        <InputStyled name="date" value={userEdit.date} onChange={handleChange} placeholder="Start Date" />
+                        <InputStyled type="date" name="date" value={userEdit.date} onChange={handleChange} placeholder="Start Date" />
                         <LabelStyled>Status</LabelStyled>
                         <InputStyled name="status" value={userEdit.status} onChange={handleChange} placeholder="Status" />
                         <LabelStyled>Description</LabelStyled>
                         <TextareaStyled name="description" value={userEdit.description} onChange={handleChange} placeholder="Description" />
-                    <ButtonStyled styled='send' type="submit">Save Changes</ButtonStyled>
-                </FormStyled>
+                        <ButtonStyled styled='send' type="submit">{isEditPage ? 'Save Changes' : 'Add User'}</ButtonStyled>
+                    </FormStyled>
                 </SectionFormStyled>
             </>
             }
-            
         </>
     );
 };
