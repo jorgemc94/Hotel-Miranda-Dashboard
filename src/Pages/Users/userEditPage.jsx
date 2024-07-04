@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { getUser, editUser, getUsersStatus, getUsersError, addUser, getUsersList } from "../../Features/users/usersSlice";
+import { getUser, editUser, addUser, getUsersList } from "../../Features/users/usersSlice";
 import { UserDetailsThunk } from "../../Features/users/userDetailsThunk";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FormStyled, ImageFormStyled, InputStyled, LabelStyled, SectionFormStyled, TextareaStyled } from "../../Components/styled/FormStyled";
