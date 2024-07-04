@@ -6,14 +6,52 @@ import { SelectStyled } from "../../Components/styled/SelectStyled";
 import { SectionOrder } from "../../Components/styled/OrderStyled";
 import data from '../../Components/data/rooms.json';
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteRoom, getRoomsStatus, getRoomsError, getRoomsList } from "../../Features/rooms/roomsSlice";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { CiEdit } from "react-icons/ci";
+import Swal from 'sweetalert2'; 
+import { RoomsThunk } from "../../Features/rooms/roomsThunk";
 
 export const RoomsListPage = () => {
+    const navigate = useNavigate();
+    const [rooms, setRooms] = useState([data]);
+    const [isLoading, setIsLoading] = useState(true);
+    const roomStatus = useSelector(getRoomsStatus) || 'idle';
+    const roomsError = useSelector(getRoomsError) || null;
+    const roomsList = useSelector(getRoomsList) || [];
+    const dispatchRedux = useDispatch();
+
+    useEffect(() => {
+        if (roomStatus === 'idle') {
+            dispatchRedux(RoomsThunk());
+        } else if (roomStatus === 'fulfilled') {
+            setIsLoading(false);
+            setRooms(roomsList);
+        } else if (roomStatus === 'rejected') {
+            setIsLoading(false);
+        }
+    }, [dispatchRedux, roomStatus, roomsList, roomsError]);
+
     const columns = [
-        { headerColumn: 'Photos', columnsData: 'photo', columnRenderer: (row) => <ImageTable styled='rooms' src={row.photosArray[0]} alt="Room Photo" /> },
+        { headerColumn: 'Photos', columnsData: 'photo', columnRenderer: (row) => 
+            row.photosArray[0] ? (
+                <ImageTable styled='rooms' src={row.photosArray[0]} alt="Room Photo" />
+            ) : (
+                <SubtitleTable>No Image</SubtitleTable>
+            ) 
+        },
         { headerColumn: 'Number', columnsData: 'roomNumber', columnRenderer: (row) => <SubtitleTable>{row.roomNumber}</SubtitleTable> },
         { headerColumn: 'ID', columnsData: 'id', columnRenderer: (row) => <SubtitleTable>{row.id}</SubtitleTable> },
         { headerColumn: 'Bed Type', columnsData: 'roomType', columnRenderer: (row) => <SubtitleTable>{row.roomType}</SubtitleTable> },
-        { headerColumn: 'Amenities', columnsData: 'amenities', columnRenderer: (row) => <SubtitleTable>{row.amenities.join(', ')}</SubtitleTable> },
+        { headerColumn: 'Amenities', columnsData: 'amenities', columnRenderer: (row) => 
+            Array.isArray(row.amenities) ? (
+                <SubtitleTable>{row.amenities.join(', ')}</SubtitleTable>
+            ) : (
+                <SubtitleTable>No Amenities</SubtitleTable>
+            )
+        },
         {
             headerColumn: 'Rate', columnsData: 'price', columnRenderer: (row) => (
                 <>
@@ -39,10 +77,42 @@ export const RoomsListPage = () => {
                 )
             )
         },
-        { headerColumn: 'Room Floor', columnsData: 'roomFloor', columnRenderer: (row) => <SubtitleTable>{row.roomFloor}</SubtitleTable> }
+        { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row) => {
+            return (
+                <>
+                    <RiDeleteBin6Line onClick={(event) => deleteHandle(event, row.id)} /> <CiEdit onClick={() => navigateEditHandle(row.id)} />
+                </>
+            )
+        } }
     ];
 
-    const [rooms, setRooms] = useState(data);
+    const deleteHandle = (event, roomId) => {
+        event.stopPropagation();
+        
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                dispatchRedux(deleteRoom(roomId));
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
+                setRooms((prevRooms) => prevRooms.filter(room => room.id !== roomId));
+            }
+        });
+    }
+
+    const navigateEditHandle = (roomId) => {
+        navigate(`/room/edit/${roomId}`);
+    };
 
     useEffect(() => {
         sortRoomsHandler('roomNumber');
@@ -81,22 +151,31 @@ export const RoomsListPage = () => {
         sortRoomsHandler('id');
     };
 
+    const navigateNewRoomHandle = () => {
+        navigate('/room/newroom');
+    }
+
     return (
         <>
-            <SectionOrder>
-                <List>
-                    <ItemList onClick={handleListClick}>All Rooms</ItemList>
-                </List>
-                <ButtonStyled styled='send'>+ New Room</ButtonStyled>
-                <SelectStyled onChange={handleSortChange}>
-                    <option value='roomNumber'>Room Number</option>
-                    <option value='availability'>Available</option>
-                    <option value='booked'>Booked</option>
-                    <option value='lowestPrice'>Price Highest to Lowest</option>
-                    <option value='highestPrice'>Price Lowest to Highest</option>
-                </SelectStyled>
-            </SectionOrder>
-            <TableComponent columns={columns} data={rooms} />
+            {isLoading ? <p>...Loading...</p> :
+                <>
+                     <SectionOrder>
+                        <List>
+                            <ItemList onClick={handleListClick}>All Rooms</ItemList>
+                        </List>
+                        <ButtonStyled styled='send' onClick={navigateNewRoomHandle}>+ New Room</ButtonStyled>
+                        <SelectStyled onChange={handleSortChange}>
+                            <option value='roomNumber'>Room Number</option>
+                            <option value='availability'>Available</option>
+                            <option value='booked'>Booked</option>
+                            <option value='lowestPrice'>Price Highest to Lowest</option>
+                            <option value='highestPrice'>Price Lowest to Highest</option>
+                        </SelectStyled>
+                    </SectionOrder>
+                    <TableComponent columns={columns} data={rooms} />
+                </>
+            }
+           
         </>
     );
 }

@@ -66,7 +66,7 @@ export const UsersPage = () => {
         }}
     ];
 
-    const deleteHandle = (event, userId) => {
+    const deleteHandle = (event, userID) => {
         event.stopPropagation();
         
         Swal.fire({
@@ -77,20 +77,18 @@ export const UsersPage = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-                dispatchRedux(deleteUser(userId)).then(() => {
-                    Swal.fire({
-                        title: "Deleted!",
-                        text: "Your file has been deleted.",
-                        icon: "success"
-                    });
-                    setUsers(users.filter(user => user.id !== userId));
+                dispatchRedux(deleteUser(userID));
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
                 });
+                setUsers((prevUsers) => prevUsers.filter(user => user.id !== userID));
             }
-          });
+        });
     }
-
     const navigateEditHandle = (userId) => {
         navigate(`/user/edit/${userId}`);
     };
