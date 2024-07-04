@@ -16,6 +16,7 @@ import { Store } from './App/store'
 import { UserDetailsPage } from './Pages/UserDetails/UserDetailsPage'
 import { UserEditPage } from './Pages/userEdit/userEditPage'
 
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <UserContextProvider>
@@ -29,7 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <Route path='/users' element={<PrivateRoute> <UsersPage /> </PrivateRoute> } />
               <Route path='/user/:id' element={<PrivateRoute><UserDetailsPage /> </PrivateRoute>} />
               <Route path='/user/edit/:id' element={<PrivateRoute><UserEditPage /> </PrivateRoute>} />
-              <Route path='/user/newuser' element={<PrivateRoute><UserDetailsPage /> </PrivateRoute>} />
+              <Route path='/user/newuser' element={<PrivateRoute><UserEditPage /> </PrivateRoute>} />
               <Route path='/contact' element={<PrivateRoute> <ContactPage /> </PrivateRoute> } />
               <Route path='/bookings' element={<PrivateRoute> <BookingsPage /> </PrivateRoute> } />
             </Route>
