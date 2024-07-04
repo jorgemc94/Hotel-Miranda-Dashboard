@@ -55,7 +55,7 @@ export const UserEditPage = () => {
                 phone: user.phone,
                 date: user.date,
                 status: user.status,
-                description: user.position?.description || '',
+                description: user.position?.description,
             });
         }
     }, [user, isEditPage]);
@@ -72,12 +72,9 @@ export const UserEditPage = () => {
             const updatedUser = { ...user, ...userEdit, position: { ...user.position, description: userEdit.description } };
             dispatchRedux(editUser(updatedUser));
         } else {
-            const newUser = {
-                ...userEdit,
-                position: { description: userEdit.description }
+            const newUser = {...userEdit, position: { description: userEdit.description }
             };
             dispatchRedux(addUser(newUser));
-            console.log(newUser);
         }
 
         navigate('/users');
