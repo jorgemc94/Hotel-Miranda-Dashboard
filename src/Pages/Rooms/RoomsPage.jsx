@@ -18,6 +18,7 @@ export const RoomsListPage = () => {
     const navigate = useNavigate();
     const [rooms, setRooms] = useState([data]);
     const [isLoading, setIsLoading] = useState(true);
+    const [sortCriteria, setSortCriteria] = useState('id');
     const roomStatus = useSelector(getRoomsStatus) || 'idle';
     const roomsError = useSelector(getRoomsError) || null;
     const roomsList = useSelector(getRoomsList) || [];
@@ -33,6 +34,10 @@ export const RoomsListPage = () => {
             setIsLoading(false);
         }
     }, [dispatchRedux, roomStatus, roomsList, roomsError]);
+
+    useEffect(() => {
+        sortRoomsHandler(sortCriteria);
+    }, [roomsList, sortCriteria]);
 
     const columns = [
         { headerColumn: 'Photos', columnsData: 'photo', columnRenderer: (row) => 
@@ -114,12 +119,8 @@ export const RoomsListPage = () => {
         navigate(`/room/edit/${roomId}`);
     };
 
-    useEffect(() => {
-        sortRoomsHandler('roomNumber');
-    }, []);
-
     const sortRoomsHandler = (value) => {
-        let sortedRooms = [...data];
+        let sortedRooms = [...roomsList];
 
         if (value === 'roomNumber') {
             sortedRooms = sortedRooms.sort((a, b) => {
@@ -144,10 +145,12 @@ export const RoomsListPage = () => {
 
     const handleSortChange = (event) => {
         const value = event.target.value;
+        setSortCriteria(value);
         sortRoomsHandler(value);
     };
 
     const handleListClick = () => {
+        setSortCriteria('id');
         sortRoomsHandler('id');
     };
 
@@ -164,18 +167,18 @@ export const RoomsListPage = () => {
                             <ItemList onClick={handleListClick}>All Rooms</ItemList>
                         </List>
                         <ButtonStyled styled='send' onClick={navigateNewRoomHandle}>+ New Room</ButtonStyled>
-                        <SelectStyled onChange={handleSortChange}>
+                        <SelectStyled value={sortCriteria} onChange={handleSortChange}>
                             <option value='roomNumber'>Room Number</option>
                             <option value='availability'>Available</option>
                             <option value='booked'>Booked</option>
                             <option value='lowestPrice'>Price Highest to Lowest</option>
                             <option value='highestPrice'>Price Lowest to Highest</option>
+                            <option value='id'>ID</option>
                         </SelectStyled>
                     </SectionOrder>
                     <TableComponent columns={columns} data={rooms} detailPage='/room'/>
                 </>
             }
-           
         </>
     );
 }

@@ -15,7 +15,8 @@ import { UserContextProvider } from './context/userContext'
 import { Store } from './App/store'
 import { UserDetailsPage } from './Pages/Users/UserDetailsPage'
 import { UserEditPage } from './Pages/Users/userEditPage'
-import { RoomDetailsPage } from './Pages/Rooms/RoomDetails'
+import { RoomDetailsPage } from './Pages/Rooms/RoomDetailsPage'
+import { RoomEditPage } from './Pages/Rooms/RoomEditPage'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -29,6 +30,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <Route path='/' element={<PrivateRoute> <DashboardPage /> </PrivateRoute> }/>
               <Route path='/rooms' element={<PrivateRoute> <RoomsListPage /> </PrivateRoute> } />
               <Route path='/room/:id' element={<PrivateRoute><RoomDetailsPage /> </PrivateRoute>} />
+              <Route path='/room/edit/:id' element={<PrivateRoute><RoomEditPage /> </PrivateRoute>} />
+              <Route path='/room/newroom' element={<PrivateRoute><RoomEditPage /> </PrivateRoute>} />
               <Route path='/users' element={<PrivateRoute> <UsersPage /> </PrivateRoute> } />
               <Route path='/user/:id' element={<PrivateRoute><UserDetailsPage /> </PrivateRoute>} />
               <Route path='/user/edit/:id' element={<PrivateRoute><UserEditPage /> </PrivateRoute>} />
