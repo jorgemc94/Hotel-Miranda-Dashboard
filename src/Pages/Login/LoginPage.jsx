@@ -29,9 +29,9 @@ export const LoginPage = () => {
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <Form onSubmit={handleSubmit}>
                 <Label>Email</Label>
-                <Input type="text" name="email" placeholder="jorgemc1294@gmail.com"></Input>
+                <Input type="text" name="email" id="email" placeholder="jorgemc1294@gmail.com"></Input>
                 <Label>Password</Label>
-                <Input type="password" name="password" placeholder="12345"></Input>
+                <Input type="password" name="password" id="password" placeholder="12345"></Input>
                 <ButtonForm type="submit">SEND</ButtonForm>
             </Form>
         </LoginForm>
