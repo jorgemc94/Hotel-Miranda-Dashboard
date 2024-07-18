@@ -9,3 +9,7 @@ export const Store = configureStore ({
             rooms: RoomsSlice.reducer
     }
 })
+
+export type AppStore = typeof Store;
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];

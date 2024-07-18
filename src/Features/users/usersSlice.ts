@@ -1,34 +1,39 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UsersThunk } from "./usersThunk";
+import { User } from "../../types";
 import { UserDetailsThunk } from "./userDetailsThunk";
+import { RootState } from "../../App/store";
 
-const initialState = {
+interface UsersState {
+    error: string | null;
+    status: 'idle' | 'pending' | 'rejected' | 'fulfilled';
+    users: User[];
+    user: User | null;
+}
+
+const initialState: UsersState = {
     error: null,
     status: 'idle',
     users: [],
-    user: null
+    user: null,
 };
 
 export const UsersSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
-        addUser: (state, action) => {
-            state.users.push(action.payload)
+        addUser: (state, action: PayloadAction<User>) => {
+            state.users.push(action.payload);
         },
-
-        deleteUser:(state,action) => {
+        deleteUser: (state, action: PayloadAction<number>) => {
             state.users = state.users.filter(user => user.id !== action.payload);
         },
-
-        editUser: (state, action) => {
+        editUser: (state, action: PayloadAction<User>) => {
             const index = state.users.findIndex(user => user.id === action.payload.id);
             if (index !== -1) {
                 state.users[index] = action.payload;
             }
         },
-
-
     },
     extraReducers: (builder) => {
         builder
@@ -37,9 +42,9 @@ export const UsersSlice = createSlice({
             })
             .addCase(UsersThunk.rejected, (state, action) => {
                 state.status = 'rejected';
-                state.error = action.error.message;
+                state.error = action.error.message || null;
             })
-            .addCase(UsersThunk.fulfilled, (state, action) => {
+            .addCase(UsersThunk.fulfilled, (state, action: PayloadAction<User[]>) => {
                 state.status = 'fulfilled';
                 state.users = action.payload;
             })
@@ -48,17 +53,20 @@ export const UsersSlice = createSlice({
             })
             .addCase(UserDetailsThunk.rejected, (state, action) => {
                 state.status = 'rejected';
-                state.error = action.error.message;
+                state.error = action.error.message || null;
             })
             .addCase(UserDetailsThunk.fulfilled, (state, action) => {
                 state.status = 'fulfilled';
-                state.user = action.payload;
+                state.user = action.payload as User;
             });
     }
 });
 
-export const getUsersList = (state) => state.users.users;
-export const getUser = (state) => state.users.user;
-export const getUsersStatus = (state) => state.users.status;
-export const getUsersError = (state) => state.users.error;
-export const {addUser, editUser, deleteUser,resetState} = UsersSlice.actions;
+export const getUsersList = (state: RootState): User[] => state.users.users;
+export const getUser = (state: RootState): User | null => state.users.user;
+export const getUsersStatus = (state: RootState): UsersState['status'] => state.users.status;
+export const getUsersError = (state: RootState): string | null => state.users.error;
+
+export const { addUser, editUser, deleteUser } = UsersSlice.actions;
+
+export default UsersSlice.reducer;

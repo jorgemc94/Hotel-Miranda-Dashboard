@@ -1,11 +1,10 @@
+import { useState, useEffect, ChangeEvent, MouseEvent } from "react";
 import { SectionOrder } from "../../Components/styled/OrderStyled";
 import { ItemList, List } from "../../Components/styled/LinkStyled";
 import { SelectStyled } from "../../Components/styled/SelectStyled";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { TableComponent } from "../../Components/Table/TableComponent";
-import data from "../../Components/data/users.json";
 import { ImageTable, SubtitleTable } from "../../Components/Table/TableStyled";
-import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsersStatus, getUsersError, getUsersList, deleteUser } from "../../Features/users/usersSlice";
 import { UsersThunk } from "../../Features/users/usersThunk";
@@ -13,21 +12,23 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import Swal from 'sweetalert2'; 
 import { useNavigate } from "react-router-dom";
+import { User } from "../../types";
+import { AppDispatch, RootState } from "../../App/store";
 
-export const UsersPage = () => {
-    const [users, setUsers] = useState(data);
-    const usersStatus = useSelector(getUsersStatus);
-    const usersList = useSelector(getUsersList);
-    const userListError = useSelector(getUsersError);
-    const dispatchRedux = useDispatch();
+export const UsersPage: React.FC = () => {
+    const [users, setUsers] = useState<User[]>([]);
+    const usersStatus = useSelector((state: RootState) => getUsersStatus(state));
+    const usersList = useSelector((state: RootState) => getUsersList(state));
+    const userListError = useSelector((state: RootState) => getUsersError(state));
+    const dispatchRedux: AppDispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         if (usersStatus === 'idle') {
             dispatchRedux(UsersThunk());
-        }else if (usersStatus === 'fulfilled') {
+        } else if (usersStatus === 'fulfilled') {
             setIsLoading(false);
             setUsers(usersList);
         } else if (usersStatus === 'rejected') {
@@ -37,8 +38,8 @@ export const UsersPage = () => {
     }, [usersStatus, usersList, userListError, dispatchRedux]);
 
     const columns = [
-        { headerColumn: 'Photos', columnsData: 'photo', columnRenderer: (row) => <ImageTable styled='users' src={row.photo} alt="User Photo" /> },
-        { headerColumn: 'Information', columnsData: 'information', columnRenderer: (row) => 
+        { headerColumn: 'Photos', columnsData: 'photo', columnRenderer: (row: User) => <ImageTable styled='users' src={row.photo} alt="User Photo" /> },
+        { headerColumn: 'Information', columnsData: 'information', columnRenderer: (row: User) => 
             (
                 <>
                     <SubtitleTable>{row.name}</SubtitleTable>
@@ -47,26 +48,27 @@ export const UsersPage = () => {
                 </>
             )
         },
-        { headerColumn: 'Start Date', columnsData: 'StartDate', columnRenderer: (row) => <SubtitleTable>{row.date}</SubtitleTable>},
-        { headerColumn: 'Description', columnsData: 'description', columnRenderer: (row) => <SubtitleTable>{row.position.description}</SubtitleTable>},
-        { headerColumn: 'Contact', columnsData: 'contact', columnRenderer: (row) => <SubtitleTable>{row.phone}</SubtitleTable>},
-        { headerColumn: 'Status', columnsData: 'status', columnRenderer: (row) => (
+        { headerColumn: 'Start Date', columnsData: 'StartDate', columnRenderer: (row: User) => <SubtitleTable>{row.date}</SubtitleTable>},
+        { headerColumn: 'Description', columnsData: 'description', columnRenderer: (row: User) => <SubtitleTable>{row.position.description}</SubtitleTable>},
+        { headerColumn: 'Contact', columnsData: 'contact', columnRenderer: (row: User) => <SubtitleTable>{row.phone}</SubtitleTable>},
+        { headerColumn: 'Status', columnsData: 'status', columnRenderer: (row: User) => (
             row.status === 'valid' ? (
                 <ButtonStyled styled='available'>{row.status}</ButtonStyled>
             ) : (
                 <ButtonStyled styled='bookedRed'>{row.status}</ButtonStyled>
             )
         )},
-        { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row) => {
+        { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row: User) => {
             return (
                 <>
-                    <RiDeleteBin6Line onClick={(event) => deleteHandle(event, row.id)} /> <CiEdit onClick={() => navigateEditHandle(row.id)} />
+                    <RiDeleteBin6Line onClick={(event: MouseEvent) => deleteHandle(event, row.id)} /> 
+                    <CiEdit onClick={() => navigateEditHandle(row.id)} />
                 </>
             )
         }}
     ];
 
-    const deleteHandle = (event, userID) => {
+    const deleteHandle = (event: MouseEvent, userID: number) => {
         event.stopPropagation();
         
         Swal.fire({
@@ -89,15 +91,16 @@ export const UsersPage = () => {
             }
         });
     }
-    const navigateEditHandle = (userId) => {
+
+    const navigateEditHandle = (userId: number) => {
         navigate(`/user/edit/${userId}`);
     };
 
-    const sortUsersHandler = (value) => {
+    const sortUsersHandler = (value: string) => {
         let sortedUsers = [...users];
 
         if (value === 'date') {
-            sortedUsers = sortedUsers.sort((a, b) => new Date(a.date) - new Date(b.date));
+            sortedUsers = sortedUsers.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         } else if (value === 'name') {
             sortedUsers = sortedUsers.sort((a, b) => a.name.localeCompare(b.name));
         } else {
@@ -107,7 +110,7 @@ export const UsersPage = () => {
         setUsers(sortedUsers);
     };
 
-    const handleSortChange = (event) => {
+    const handleSortChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
         sortUsersHandler(value);
     };
