@@ -10,7 +10,11 @@ export const List = styled.ul `
     width: 100%;
 `
 
-export const ItemList = styled.li `
+interface ItemListProps {
+    $active?: boolean; 
+  }
+
+export const ItemList = styled.li<ItemListProps> `
     cursor: pointer;
     width: 40%;
     padding-bottom: 0.625em;

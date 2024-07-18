@@ -18,7 +18,11 @@ export const TextMenu = styled.div`
     padding-left: 1em;
 `;
 
-export const TextLogo = styled.span`
+interface TextLogoProps {
+    $title?: boolean; 
+  }
+
+export const TextLogo = styled.span<TextLogoProps>`
     font-size: ${props => props.$title ? '1.5em' : '0.6em'};
     font-weight: ${props => props.$title ? 700 : 400};
 `;
@@ -64,7 +68,11 @@ export const UserImg = styled.img `
     transform: translateY(-25%);
 `
 
-export const UserName = styled.p `
+interface UserNameProps {
+    $title?: boolean; 
+  }
+
+export const UserName = styled.p<UserNameProps>`
     color: #393939;
     color: ${props => props.$title ? '#393939' : '#B2B2B2;'};
     font-size: ${props => props.$title ? '1em' : '0.75em;'};

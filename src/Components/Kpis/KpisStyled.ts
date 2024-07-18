@@ -19,7 +19,11 @@ export const KpisText = styled.div `
     padding-left: 1.5em;
 `
 
-export const KpisTextDetails = styled.p `
+interface KpisTextDetailsProps {
+    $number : boolean
+}
+
+export const KpisTextDetails = styled.p<KpisTextDetailsProps>`
     color: ${props => props.$number ? '#393939' : '#787878'};
     font-size: ${props => props.$number ? '1.875em' : '0.875em'};
     margin: 0;
