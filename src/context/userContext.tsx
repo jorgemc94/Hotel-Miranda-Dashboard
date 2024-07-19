@@ -1,6 +1,17 @@
-import { createContext, useEffect, useReducer } from "react";
+import React, { createContext, useEffect, useReducer, ReactNode } from "react";
 
-const getInitialState = () => {
+interface UserState {
+    name: string | null;
+    email: string | null;
+    isLoggedIn: boolean;
+}
+
+type UserAction =
+    | { type: "LOGIN"; payload: { name: string; email: string } }
+    | { type: "LOGOUT" }
+    | { type: "EDITUSER"; payload: { name: string; email: string } };
+
+const getInitialState = (): UserState => {
     const initialState = localStorage.getItem('auth');
     if (initialState) {
         return JSON.parse(initialState);
@@ -12,7 +23,7 @@ const getInitialState = () => {
     };
 };
 
-const userReducer = (state, action) => {
+const userReducer = (state: UserState, action: UserAction): UserState => {
     switch (action.type) {
         case "LOGIN":
             return {
@@ -39,9 +50,12 @@ const userReducer = (state, action) => {
     }
 };
 
-export const UserContext = createContext(null);
+export const UserContext = createContext<{
+    state: UserState;
+    dispatch: React.Dispatch<UserAction>;
+} | null>(null);
 
-export const UserContextProvider = ({ children }) => {
+export const UserContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [state, dispatch] = useReducer(userReducer, getInitialState());
 
     useEffect(() => {

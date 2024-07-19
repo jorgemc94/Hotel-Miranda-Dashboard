@@ -73,3 +73,6 @@ export const ButtonForm = styled.button`
     margin-right: 4.8em;
 `;
 
+export const TextError = styled.p`
+    color: red;
+`

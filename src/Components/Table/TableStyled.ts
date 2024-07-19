@@ -8,15 +8,24 @@ export const TableStyled = styled.table `
     padding: 1em;
 `
 
-export const SubtitleTable = styled.p `
+interface SubtitleTableProps {
+    $subtitle?: boolean;
+}
+
+export const SubtitleTable = styled.p<SubtitleTableProps>`
     color: ${props => props.$subtitle ? '#799283' : '#393939'};
     font-size: ${props => props.$subtitle ? '0.875em' : '1em'};
-`
+`;
 
-export const PriceTable = styled.span `
-    color: ${props => props.$price ? '#212121;' : '#799283'};
-    font-size: ${props => props.$price ? '1em' : '1.2emem'};
-`
+interface PriceTableProps {
+    $price?: boolean;
+}
+
+export const PriceTable = styled.span<PriceTableProps>`
+    color: ${props => props.$price ? '#212121' : '#799283'};
+    font-size: ${props => props.$price ? '1em' : '1.2em'};
+`;
+
 
 export const NameTable = styled.div `
     display: flex;
@@ -28,7 +37,7 @@ export const ContentTable = styled.td `
     padding: 0.5em 1em;
 `
 
-export const ImageTable = styled.img `
+export const ImageTable = styled.img <{styled : "rooms" | "users" | "bookings"}>`
     text-align: center;
     ${props => {
         switch (props.styled) {

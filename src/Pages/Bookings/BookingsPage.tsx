@@ -35,7 +35,7 @@ export const BookingsPage = () => {
         sortBookingsHandler('id');
     }, []);
 
-    const sortBookingsHandler = (value) => {
+    const sortBookingsHandler = (value : string) => {
         let sortedBookings = [...data];
 
         if (value === 'orderDate') {

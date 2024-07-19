@@ -16,7 +16,11 @@ export const ContentDetails = styled.div `
     padding: 2em;
 `
 
-export const TextDetails = styled.p `
+interface TextDetailsProps {
+    $title?: boolean; 
+  }
+
+export const TextDetails = styled.p<TextDetailsProps> `
     color: ${props => props.$title ? '#222' : '#799283'};
     font-size: ${props => props.$title ? '1.5em' : '1.2em'};
     margin: 0;
@@ -28,7 +32,11 @@ export const ContentText = styled.div `
     padding-bottom: 1.5em;
 `
 
-export const ContentTextDetails = styled.div `
+interface ContentTextDetailsProps {
+    $right?: boolean; 
+  }
+
+export const ContentTextDetails = styled.div<ContentTextDetailsProps>`
     width:100%;
     text-align: ${props => props.$right ? 'right' : 'left'}
 `
