@@ -6,7 +6,7 @@ const delay = (data: any): Promise<any> => {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(data);
-        }, 200);
+        }, 500);
     });
 };
 

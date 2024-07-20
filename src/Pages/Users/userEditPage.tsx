@@ -8,15 +8,32 @@ import { FormStyled, ImageFormStyled, InputStyled, LabelStyled, SectionFormStyle
 import { FiArrowLeft } from "react-icons/fi";
 import { AppDispatch, RootState } from "../../App/store";
 import { User } from "../../types";
+import { SingleValue } from "react-select";
+import { SelectForm } from "../../Components/styled/SelectStyled";
+import Swal from 'sweetalert2';
+
+type Params = {
+    id: string;
+};
 
 export const UserEditPage = () => {
-    const { id } = useParams<{ id: string }>();
+    const { id } = useParams<Params>();
     const navigate = useNavigate();
     const dispatchRedux: AppDispatch = useDispatch();
     const user = useSelector((state: RootState) => getUser(state));
     const usersError = useSelector((state: RootState) => state.users.error);
     const usersList = useSelector((state: RootState) => getUsersList(state));
-    const [userEdit, setUserEdit] = useState<User>({ id: 0, photo: "", name: "", email: "", phone: "", date: "", status: "", position: { name: "Manager", description: "" }, password: "" });
+    const [userEdit, setUserEdit] = useState<User>({
+        id: 0,
+        photo: "",
+        name: "",
+        email: "",
+        phone: "",
+        date: "",
+        status: "",
+        position: { name: "Manager", description: "" },
+        password: ""
+    });
     const [isLoading, setIsLoading] = useState(true);
     const isEditPage = Boolean(id);
 
@@ -25,7 +42,7 @@ export const UserEditPage = () => {
         const fetchUserDetails = async () => {
             if (isEditPage) {
                 try {
-                    await dispatchRedux(UserDetailsThunk({ id: numberId, usersList: usersList }));
+                    await dispatchRedux(UserDetailsThunk({ id: numberId, usersList }));
                 } catch (err) {
                     console.log(usersError);
                 }
@@ -53,6 +70,27 @@ export const UserEditPage = () => {
         setUserEdit({ ...userEdit, [name]: value });
     };
 
+    const handleSelectChange = (selectedOption: SingleValue<{ value: "Manager" | "Room service" | "Reception" ; label: string }>) => {
+        if (selectedOption) {
+            setUserEdit(prevState => ({
+                ...prevState,
+                position: {
+                    ...prevState.position,
+                    name: selectedOption.value
+                }
+            }));
+        }
+    };
+
+    const handleSelectStatusChange = (selectedOption: SingleValue<{ value: "valid" | "invalid"; label: string }>) => {
+        if (selectedOption) {
+            setUserEdit(prevState => ({
+                ...prevState,
+                status: selectedOption.value
+            }));
+        }
+    };
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -64,14 +102,52 @@ export const UserEditPage = () => {
         }
     };
 
+    const optionsActivity = [
+        { value: "Manager", label: "Manager" },
+        { value: "Room service", label: "Room service" },
+        { value: "Reception", label: "Reception" }
+    ];
+
+    const optionStatus = [
+        { value: "valid", label: "valid" },
+        { value: "invalid", label: "invalid" }
+    ]
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (!user) {
+            return;
+        }
         if (isEditPage) {
-            const updatedUser = { ...user, ...userEdit, position: { ...user.position, description: userEdit.position.description } };
+            const updatedUser = { 
+                ...user, 
+                ...userEdit, 
+                position: { 
+                    ...user.position, 
+                    name: userEdit.position.name,
+                    description: userEdit.position.description 
+                } 
+            };
             dispatchRedux(editUser(updatedUser));
+            Swal.fire({
+                title: "Edit User!",
+                text: "Your file has been edited.",
+                icon: "success"
+            });
         } else {
-            const newUser = { ...userEdit, position: { description: userEdit.position.description } };
+            const newUser: User = { 
+                ...userEdit, 
+                position: { 
+                    name: userEdit.position.name,
+                    description: userEdit.position.description 
+                },
+            };
             dispatchRedux(addUser(newUser));
+            Swal.fire({
+                title: "New User!",
+                text: "Your file has been added.",
+                icon: "success"
+            });
         }
         navigate('/users');
     };
@@ -100,9 +176,21 @@ export const UserEditPage = () => {
                             <LabelStyled>Start Date</LabelStyled>
                             <InputStyled type="date" name="date" value={userEdit.date} onChange={handleChange} placeholder="Start Date" />
                             <LabelStyled>Status</LabelStyled>
-                            <InputStyled name="status" value={userEdit.status} onChange={handleChange} placeholder="Status" />
+                            <SelectForm
+                            name="status"
+                            options={optionStatus}
+                            value={optionStatus.find(option => option.value === userEdit.status)}
+                            onChange={(option) => handleSelectStatusChange(option as SingleValue<{ value: "valid" | "invalid" ; label: string }>)} 
+                            />
                             <LabelStyled>Description</LabelStyled>
                             <TextareaStyled name="position.description" value={userEdit.position.description} onChange={handleChange} placeholder="Description" />
+                            <LabelStyled>Activity</LabelStyled>
+                            <SelectForm 
+                                name="activity"
+                                options={optionsActivity}
+                                value={optionsActivity.find(option => option.value === userEdit.position.name)}
+                                onChange={(option) => handleSelectChange(option as SingleValue<{ value: "Manager" | "Room service" | "Reception"; label: string }>)} 
+                            />
                             <ButtonStyled styled='send' type="submit">{isEditPage ? 'Save Changes' : 'New User'}</ButtonStyled>
                         </FormStyled>
                     </SectionFormStyled>

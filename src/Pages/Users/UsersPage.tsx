@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import { User } from "../../types";
 import { AppDispatch, RootState } from "../../App/store";
+import { FourSquare } from "react-loading-indicators";
 
 export const UsersPage: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -135,7 +136,7 @@ export const UsersPage: React.FC = () => {
 
     return (
         <>
-            {isLoading ? <p>...Loading...</p> : 
+            {isLoading ? <p><FourSquare color="#32cd32" size="medium" text="" textColor="" /></p> : 
                 <SectionOrder>
                     <List>
                         <ItemList onClick={handleClickAll}>All Employees</ItemList>
