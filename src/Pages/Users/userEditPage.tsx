@@ -11,13 +11,10 @@ import { User } from "../../types";
 import { SingleValue } from "react-select";
 import { SelectForm } from "../../Components/styled/SelectStyled";
 import Swal from 'sweetalert2';
-
-type Params = {
-    id: string;
-};
+import { FourSquare } from "react-loading-indicators";
 
 export const UserEditPage = () => {
-    const { id } = useParams<Params>();
+    const { id } = useParams<string>();
     const navigate = useNavigate();
     const dispatchRedux: AppDispatch = useDispatch();
     const user = useSelector((state: RootState) => getUser(state));
@@ -158,7 +155,7 @@ export const UserEditPage = () => {
 
     return (
         <>
-            {isLoading ? <p>...Cargando</p> :
+            {isLoading ? <FourSquare color="#32cd32" size="medium" text="" textColor="" /> :
                 <>
                     <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled>
                     <SectionFormStyled>

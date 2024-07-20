@@ -6,24 +6,43 @@ import { FiArrowLeft } from "react-icons/fi";
 import { addRoom, editRoom, getRoom, getRoomsList } from "../../Features/rooms/roomsSlice";
 import { RoomDetailsThunk } from "../../Features/rooms/roomsDetailsThunk";
 import { FormStyled, InputStyled, LabelStyled, SectionFormStyled, TextareaStyled } from "../../Components/styled/FormStyled";
+import { AppDispatch, RootState } from "../../App/store";
+import { Room } from "../../types";
+import { SingleValue } from "react-select";
+import { SelectForm } from "../../Components/styled/SelectStyled";
+import Swal from 'sweetalert2';
+import { FourSquare } from "react-loading-indicators";
 
 export const RoomEditPage = () => {
-    const { id } = useParams();
+    const { id } = useParams<string>();
     const navigate = useNavigate();
-    const dispatchRedux = useDispatch();
-    const room = useSelector(getRoom);
-    const [roomEdit, setRoomEdit] = useState({id: "", roomNumber: "", availability: "", roomType: "", description: "", price: "", discount: "", cancellation: "", amenities: [], photosArray: [] });
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const dispatchRedux: AppDispatch = useDispatch();
+    const room = useSelector((state: RootState) => getRoom(state));
     const roomsList = useSelector(getRoomsList);
+    const [roomEdit, setRoomEdit] = useState<Room>({
+        id: 0,
+        roomNumber: 0,
+        availability: "available",
+        roomType: "Double Superior",
+        description: "",
+        price: 0,
+        discount: 0,
+        cancellation: "",
+        amenities: [],
+        photosArray: [],
+        offer: false,
+    });
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<any>(null);
 
     const isEditPage = Boolean(id);
 
     useEffect(() => {
         const fetchRoomDetails = async () => {
+            const numberId = Number(id);
             if (isEditPage) {
                 try {
-                    await dispatchRedux(RoomDetailsThunk({ id: id, roomsList: roomsList })).unwrap();
+                    await dispatchRedux(RoomDetailsThunk({ id: numberId, roomList: roomsList }));
                 } catch (err) {
                     setError(err);
                 }
@@ -47,44 +66,89 @@ export const RoomEditPage = () => {
                 cancellation: room.cancellation,
                 amenities: room.amenities,
                 photosArray: room.photosArray,
+                offer: room.offer
             });
         }
     }, [room, isEditPage]);
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setRoomEdit({ ...roomEdit, [name]: value });
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value, type } = event.target;
+
+        if (type === 'checkbox' && name === 'offer') {
+            setRoomEdit({ ...roomEdit });
+        } else if (name === 'price' || name === 'discount') {
+            setRoomEdit({ ...roomEdit, [name]: parseFloat(value) });
+        } else {
+            setRoomEdit({ ...roomEdit, [name]: value });
+        }
     };
 
-    const handleSubmit = (event) => {
+    const handleSelectChange = (selectedOptions: any, name: string) => {
+        const values = selectedOptions.map((option: { value: string }) => option.value);
+        setRoomEdit({ ...roomEdit, [name]: values });
+    };
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (isEditPage) {
             dispatchRedux(editRoom(roomEdit));
+            Swal.fire({
+                title: "Edit Room!",
+                text: "Your file has been edited.",
+                icon: "success"
+            });
         } else {
             dispatchRedux(addRoom(roomEdit));
+            Swal.fire({
+                title: "New Room!",
+                text: "Your file has been added.",
+                icon: "success"
+            });
         }
 
         navigate('/rooms');
+    };
+
+    const optionsAmenities = [
+        { value: "Breakfast", label: "Breakfast" },
+        { value: "Grocery", label: "Grocery" },
+        { value: "Cleaning", label: "Cleaning" },
+        { value: "Shop Near", label: "Shop Near" },
+        { value: "Towels", label: "Towels" },
+        { value: "Air conditioner", label: "Air conditioner" },
+        { value: "Kitchen", label: "Kitchen" },
+        { value: "TV", label: "TV" },
+        { value: "Shower", label: "Shower" },
+        { value: "High speed WiFi", label: "High speed WiFi" },
+        { value: "Beach views", label: "Beach views" },
+    ];
+
+    const optionStatus = [
+        { value: "available", label: "available" },
+        { value: "booked", label: "booked" }
+    ]
+
+    const handleSelectStatusChange = (selectedOption: SingleValue<{ value: "available" | "booked"; label: string }>) => {
+        if (selectedOption) {
+            setRoomEdit(prevState => ({
+                ...prevState,
+                availability: selectedOption.value
+            }));
+        }
     };
 
     const navigateHandle = () => {
         navigate('/rooms');
     };
 
-  
-
-    if (error) {
-        return <p>Error: {error.message}</p>;
-    }
-
     return (
         <>
-            {isLoading ? <p>...Loading...</p> : 
+            {isLoading ? <FourSquare color="#32cd32" size="medium" text="" textColor="" /> : 
                 <>
                     <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled>
-                        <SectionFormStyled>
-                            <FormStyled onSubmit={handleSubmit}>
+                    <SectionFormStyled>
+                        <FormStyled onSubmit={handleSubmit}>
                             <LabelStyled>ID</LabelStyled>
                             <InputStyled type="number" name="id" value={roomEdit.id} onChange={handleChange} readOnly={isEditPage} placeholder="Id" />
                             <LabelStyled>Number</LabelStyled>
@@ -92,26 +156,36 @@ export const RoomEditPage = () => {
                             <LabelStyled>Bed Type</LabelStyled>
                             <InputStyled type="text" name="roomType" value={roomEdit.roomType} onChange={handleChange} placeholder="Room Type" />
                             <LabelStyled>Availability</LabelStyled>
-                            <InputStyled type="text" name="availability" value={roomEdit.availability} onChange={handleChange} placeholder="Availability" />
+                            <SelectForm
+                            name="status"
+                            options={optionStatus}
+                            value={optionStatus.find(option => option.value === roomEdit.availability)}
+                            onChange={(option) => handleSelectStatusChange(option as SingleValue<{ value: "available" | "booked" ; label: string }>)} 
+                            />
                             <LabelStyled>Description</LabelStyled>
-                            <TextareaStyled name="description" value={roomEdit.description} onChange={handleChange} placeholder="Description"> </TextareaStyled>
+                            <TextareaStyled name="description" value={roomEdit.description} onChange={handleChange} placeholder="Description" />
                             <LabelStyled>Price</LabelStyled>
                             <InputStyled type="number" name="price" value={roomEdit.price} onChange={handleChange} placeholder="Price" />
                             <LabelStyled>Discount (%)</LabelStyled>
-                            <InputStyled type="Number" name="discount" value={roomEdit.discount} onChange={handleChange} placeholder="Discount (%)" />
+                            <InputStyled type="number" name="discount" value={roomEdit.discount} onChange={handleChange} placeholder="Discount (%)" />
                             <LabelStyled>Cancellation</LabelStyled>
-                            <TextareaStyled placeholder="reason for cancellation" name="cancellation" value={roomEdit.cancellation} onChange={handleChange} />
+                            <TextareaStyled placeholder="Reason for cancellation" name="cancellation" value={roomEdit.cancellation} onChange={handleChange} />
                             <LabelStyled>Amenities</LabelStyled>
-                            <InputStyled type="text" name="amenities"  value={roomEdit.amenities.join(', ')} onChange={(e) => setRoomEdit({ ...roomEdit, amenities: e.target.value.split(',').map(item => item.trim()) })} placeholder="Amenities" />
+                            <SelectForm
+                                name="amenities"
+                                options={optionsAmenities}
+                                isMulti
+                                value={optionsAmenities.filter(option => roomEdit.amenities.includes(option.value))}
+                                onChange={(selectedOptions) => handleSelectChange(selectedOptions, "amenities")}
+                            />
                             <LabelStyled>Photos</LabelStyled>
-                            <InputStyled type="text" name="photosArray"  value={roomEdit.photosArray.join(', ')}  onChange={(e) => setRoomEdit({ ...roomEdit, photosArray: e.target.value.split(',').map(item => item.trim()) })} placeholder="Photos" />
+                            <InputStyled type="text" name="photosArray" value={roomEdit.photosArray.join(', ')} onChange={(e) => setRoomEdit({ ...roomEdit, photosArray: e.target.value.split(',').map(item => item.trim()) })} placeholder="Photos" />
+                            <LabelStyled>Offer</LabelStyled>
                             <ButtonStyled type="submit" styled='send'>{isEditPage ? 'Update Room' : 'Add Room'}</ButtonStyled>
                         </FormStyled>
                     </SectionFormStyled>
-                    
                 </>
             }
-           
         </>
     );
 };

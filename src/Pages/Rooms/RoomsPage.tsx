@@ -1,11 +1,4 @@
-import { TableComponent } from "../../Components/Table/TableComponent";
-import { ImageTable, PriceTable, SubtitleTable } from "../../Components/Table/TableStyled";
-import { ButtonStyled } from "../../Components/styled/ButtonStyled";
-import { ItemList, List } from "../../Components/styled/LinkStyled";
-import { SelectStyled } from "../../Components/styled/SelectStyled";
-import { SectionOrder } from "../../Components/styled/OrderStyled";
-import data from '../../Components/data/rooms.json';
-import { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteRoom, getRoomsStatus, getRoomsError, getRoomsList } from "../../Features/rooms/roomsSlice";
@@ -13,16 +6,25 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import Swal from 'sweetalert2'; 
 import { RoomsThunk } from "../../Features/rooms/roomsThunk";
+import { Room } from "../../types";
+import { AppDispatch, RootState } from "../../App/store";
+import { FourSquare } from "react-loading-indicators";
+import { TableComponent } from "../../Components/Table/TableComponent";
+import { ImageTable, PriceTable, SubtitleTable } from "../../Components/Table/TableStyled";
+import { ButtonStyled } from "../../Components/styled/ButtonStyled";
+import { ItemList, List } from "../../Components/styled/LinkStyled";
+import { SelectStyled } from "../../Components/styled/SelectStyled";
+import { SectionOrder } from "../../Components/styled/OrderStyled";
 
 export const RoomsListPage = () => {
     const navigate = useNavigate();
-    const [rooms, setRooms] = useState([data]);
+    const [rooms, setRooms] = useState<Room[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [sortCriteria, setSortCriteria] = useState('id');
-    const roomStatus = useSelector(getRoomsStatus) || 'idle';
-    const roomsError = useSelector(getRoomsError) || null;
-    const roomsList = useSelector(getRoomsList) || [];
-    const dispatchRedux = useDispatch();
+    const roomStatus = useSelector((state: RootState) => getRoomsStatus(state));
+    const roomsError = useSelector((state: RootState) => getRoomsError(state));
+    const roomsList = useSelector((state: RootState) => getRoomsList(state));
+    const dispatchRedux: AppDispatch = useDispatch();
 
     useEffect(() => {
         if (roomStatus === 'idle') {
@@ -40,60 +42,77 @@ export const RoomsListPage = () => {
     }, [roomsList, sortCriteria]);
 
     const columns = [
-        { headerColumn: 'Photos', columnsData: 'photo', columnRenderer: (row) => 
-            row.photosArray[0] ? (
-                <ImageTable styled='rooms' src={row.photosArray[0]} alt="Room Photo" />
-            ) : (
-                <SubtitleTable>No Image</SubtitleTable>
-            ) 
+        {
+            headerColumn: 'Photos',
+            columnsData: 'photo',
+            columnRenderer: (row: Room) => (
+                row.photosArray[0] ? (
+                    <ImageTable styled='rooms' src={row.photosArray[0]} alt="Room Photo" />
+                ) : (
+                    <SubtitleTable>No Image</SubtitleTable>
+                )
+            ),
         },
-        { headerColumn: 'Number', columnsData: 'roomNumber', columnRenderer: (row) => <SubtitleTable>{row.roomNumber}</SubtitleTable> },
-        { headerColumn: 'ID', columnsData: 'id', columnRenderer: (row) => <SubtitleTable>{row.id}</SubtitleTable> },
-        { headerColumn: 'Bed Type', columnsData: 'roomType', columnRenderer: (row) => <SubtitleTable>{row.roomType}</SubtitleTable> },
-        { headerColumn: 'Amenities', columnsData: 'amenities', columnRenderer: (row) => 
-            Array.isArray(row.amenities) ? (
-                <SubtitleTable>{row.amenities.join(', ')}</SubtitleTable>
-            ) : (
-                <SubtitleTable>No Amenities</SubtitleTable>
-            )
+        { headerColumn: 'Number', columnsData: 'roomNumber', columnRenderer: (row: Room) => <SubtitleTable>{row.roomNumber}</SubtitleTable> },
+        { headerColumn: 'ID', columnsData: 'id', columnRenderer: (row: Room) => <SubtitleTable>{row.id}</SubtitleTable> },
+        { headerColumn: 'Bed Type', columnsData: 'roomType', columnRenderer: (row: Room) => <SubtitleTable>{row.roomType}</SubtitleTable> },
+        {
+            headerColumn: 'Amenities',
+            columnsData: 'amenities',
+            columnRenderer: (row: Room) => (
+                Array.isArray(row.amenities) ? (
+                    <SubtitleTable>{row.amenities.join(', ')}</SubtitleTable>
+                ) : (
+                    <SubtitleTable>No Amenities</SubtitleTable>
+                )
+            ),
         },
         {
-            headerColumn: 'Rate', columnsData: 'price', columnRenderer: (row) => (
+            headerColumn: 'Rate',
+            columnsData: 'price',
+            columnRenderer: (row: Room) => (
                 <>
                     <PriceTable $price>{row.price}€</PriceTable>
-                    <PriceTable $price>{'/night'}</PriceTable>
+                    <PriceTable $price>/night</PriceTable>
                 </>
-            )
+            ),
         },
         {
-            headerColumn: 'Offer Price', columnsData: 'offer', columnRenderer: (row) => (
+            headerColumn: 'Offer Price',
+            columnsData: 'offer',
+            columnRenderer: (row: Room) => (
                 <>
-                    <PriceTable>{(row.price - (row.price * (row.discount / 100))).toFixed(0)}€ </PriceTable>
-                    <PriceTable>{'/night'}</PriceTable>
+                    <PriceTable>{(row.price - (row.price * (row.discount / 100))).toFixed(0)}€</PriceTable>
+                    <PriceTable>/night</PriceTable>
                 </>
-            )
+            ),
         },
         {
-            headerColumn: 'Status', columnsData: 'availability', columnRenderer: (row) => (
+            headerColumn: 'Status',
+            columnsData: 'availability',
+            columnRenderer: (row: Room) => (
                 row.availability === 'booked' ? (
                     <ButtonStyled styled='bookedRed'>{row.availability}</ButtonStyled>
                 ) : (
                     <ButtonStyled styled='available'>{row.availability}</ButtonStyled>
                 )
-            )
+            ),
         },
-        { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row) => {
-            return (
+        {
+            headerColumn: 'Actions',
+            columnsData: 'actions',
+            columnRenderer: (row: Room) => (
                 <>
-                    <RiDeleteBin6Line onClick={(event) => deleteHandle(event, row.id)} /> <CiEdit onClick={() => navigateEditHandle(row.id)} />
+                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row.id)} />
+                    <CiEdit onClick={() => navigateEditHandle(row.id)} />
                 </>
-            )
-        } }
+            ),
+        },
     ];
 
-    const deleteHandle = (event, roomId) => {
+    const deleteHandle = (event: React.MouseEvent<SVGElement>, roomId: number) => {
         event.stopPropagation();
-        
+
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -106,28 +125,23 @@ export const RoomsListPage = () => {
             if (result.isConfirmed) {
                 dispatchRedux(deleteRoom(roomId));
                 Swal.fire({
-                    title: "Deleted!",
+                    title: "Room Deleted!",
                     text: "Your file has been deleted.",
                     icon: "success"
                 });
-                setRooms((prevRooms) => prevRooms.filter(room => room.id !== roomId));
             }
         });
-    }
+    };
 
-    const navigateEditHandle = (roomId) => {
+    const navigateEditHandle = (roomId: number) => {
         navigate(`/room/edit/${roomId}`);
     };
 
-    const sortRoomsHandler = (value) => {
+    const sortRoomsHandler = (value: string) => {
         let sortedRooms = [...roomsList];
 
         if (value === 'roomNumber') {
-            sortedRooms = sortedRooms.sort((a, b) => {
-                const numA = a.roomNumber.toString();
-                const numB = b.roomNumber.toString();
-                return numA.localeCompare(numB);
-            });
+            sortedRooms = sortedRooms.sort((a, b) => a.roomNumber - b.roomNumber);
         } else if (value === 'availability') {
             sortedRooms = sortedRooms.filter(room => room.availability === 'available');
         } else if (value === 'booked') {
@@ -143,7 +157,7 @@ export const RoomsListPage = () => {
         setRooms(sortedRooms);
     };
 
-    const handleSortChange = (event) => {
+    const handleSortChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
         setSortCriteria(value);
         sortRoomsHandler(value);
@@ -156,11 +170,11 @@ export const RoomsListPage = () => {
 
     const navigateNewRoomHandle = () => {
         navigate('/room/newroom');
-    }
+    };
 
     return (
         <>
-            {isLoading ? <p>...Loading...</p> :
+            {isLoading ? <FourSquare color="#32cd32" size="medium" text="" textColor="" /> :
                 <>
                      <SectionOrder>
                         <List>
@@ -181,4 +195,4 @@ export const RoomsListPage = () => {
             }
         </>
     );
-}
+};

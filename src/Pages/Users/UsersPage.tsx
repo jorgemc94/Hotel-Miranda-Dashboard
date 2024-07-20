@@ -136,7 +136,7 @@ export const UsersPage: React.FC = () => {
 
     return (
         <>
-            {isLoading ? <p><FourSquare color="#32cd32" size="medium" text="" textColor="" /></p> : 
+            {isLoading ?<FourSquare color="#32cd32" size="medium" text="" textColor="" />: 
                 <SectionOrder>
                     <List>
                         <ItemList onClick={handleClickAll}>All Employees</ItemList>

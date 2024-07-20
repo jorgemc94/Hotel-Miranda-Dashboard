@@ -16,23 +16,15 @@ export interface User {
 
 
 export interface Room {
-    id: number,
-    roomNumber: number,
-    availability: "available",
-    roomType: "Double Superior",
-    description: string,
-    offer: boolean,
-    price: number,
-    discount: number,
-    cancellation: string,
-    amenities: [
-        string
-    ],
-    photosArray: [
-        string,
-        string,
-        string,
-        string,
-        string
-    ]
+    id: number;
+    roomNumber: number;
+    availability: "available" | "booked";
+    roomType: "Double Superior";
+    description: string;
+    offer: boolean;
+    price: number;
+    discount: number;
+    cancellation: string;
+    amenities: string[];
+    photosArray: string[];
 }
