@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "../../App/store";
 import { User } from "../../types";
 import { SingleValue } from "react-select";
 import { SelectForm } from "../../Components/styled/SelectStyled";
+import Swal from 'sweetalert2';
 
 type Params = {
     id: string;
@@ -81,7 +82,7 @@ export const UserEditPage = () => {
         }
     };
 
-    const handleSelectStatusChange = (selectedOption: SingleValue<{ value: "Valid" | "Invalid"; label: string }>) => {
+    const handleSelectStatusChange = (selectedOption: SingleValue<{ value: "valid" | "invalid"; label: string }>) => {
         if (selectedOption) {
             setUserEdit(prevState => ({
                 ...prevState,
@@ -128,6 +129,11 @@ export const UserEditPage = () => {
                 } 
             };
             dispatchRedux(editUser(updatedUser));
+            Swal.fire({
+                title: "Edit User!",
+                text: "Your file has been edited.",
+                icon: "success"
+            });
         } else {
             const newUser: User = { 
                 ...userEdit, 
@@ -137,6 +143,11 @@ export const UserEditPage = () => {
                 },
             };
             dispatchRedux(addUser(newUser));
+            Swal.fire({
+                title: "New User!",
+                text: "Your file has been added.",
+                icon: "success"
+            });
         }
         navigate('/users');
     };
@@ -169,7 +180,7 @@ export const UserEditPage = () => {
                             name="status"
                             options={optionStatus}
                             value={optionStatus.find(option => option.value === userEdit.status)}
-                            onChange={(option) => handleSelectStatusChange(option as SingleValue<{ value: "Valid" | "Invalid" ; label: string }>)} 
+                            onChange={(option) => handleSelectStatusChange(option as SingleValue<{ value: "valid" | "invalid" ; label: string }>)} 
                             />
                             <LabelStyled>Description</LabelStyled>
                             <TextareaStyled name="position.description" value={userEdit.position.description} onChange={handleChange} placeholder="Description" />

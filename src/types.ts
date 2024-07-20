@@ -10,7 +10,7 @@ export interface User {
         description:string
     },
     date: string,
-    status: "Valid" | "Invalid" | "",
+    status: "valid" | "invalid" | "",
     password: string
 }
 
