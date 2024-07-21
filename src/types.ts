@@ -40,3 +40,17 @@ export interface Booking {
     roomId: number,
     status: "In progress" | "Check In" | "Check Out"
 }
+
+export interface Contact {
+    date: string,
+    client: {
+        name: string,
+        email: string,
+        phone: string,
+        image: string,
+    },
+    id: number,
+    subject: string,
+    comment: string,
+    archived: "false" | "true"
+}

@@ -1,14 +1,18 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { MenuFooter, MenuFooterTitle, MenuFooterSubtitle, MenuLogo, ImageMenu, TextMenu, TextLogo, User, UserImg, UserName, UserButton, NavLinkStyle, NavigationList, NavigationItem } from "./MenuStyled";
 import { MdOutlineDashboard, MdOutlineContactMail } from "react-icons/md";
 import { TfiKey } from "react-icons/tfi";
 import { LuCalendarCheck2 } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
 import { UserContext } from '../../context/userContext';
-import {PopupComponent} from '../Popup/PopupComponent';
+import { PopupComponent } from '../Popup/PopupComponent';
 
 export const MenuComponent = () => {
-    const { state } = useContext(UserContext);
+    const context = useContext(UserContext);
+    if (!context) {
+        throw new Error('UserContext must be used within a UserContextProvider');
+    }
+    const { state } = context;
     const [isModalActive, setIsModalActive] = useState(false);
 
     const openModal = () => setIsModalActive(true);
@@ -17,7 +21,7 @@ export const MenuComponent = () => {
     return (
         <>
             <MenuLogo>
-                <ImageMenu src="src/assets/icon.png" alt="logo" />
+                <ImageMenu src="/src/assets/icon.png" alt="logo" />
                 <TextMenu>
                     <TextLogo $title>travl</TextLogo>
                     <TextLogo>Hotel Admin Dashboard</TextLogo>
@@ -48,7 +52,7 @@ export const MenuComponent = () => {
                         Users
                     </NavigationItem>
                 </NavLinkStyle>
-                <NavLinkStyle to={'/contact'}>
+                <NavLinkStyle to={'/contacts'}>
                     <NavigationItem>
                         <MdOutlineContactMail className="icons icons--link" />
                         Contact
@@ -56,7 +60,7 @@ export const MenuComponent = () => {
                 </NavLinkStyle>
             </NavigationList>
             <User>
-                <UserImg src="src/assets/jorge.png"></UserImg>
+                <UserImg src="/src/assets/jorge.png" alt="User" />
                 <UserName $title={true}>{state.name}</UserName>
                 <UserName>{state.email}</UserName>
                 <UserButton onClick={openModal}>Contact Us</UserButton>
@@ -71,4 +75,3 @@ export const MenuComponent = () => {
         </>
     );
 };
-

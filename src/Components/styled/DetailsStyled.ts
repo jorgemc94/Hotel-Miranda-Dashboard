@@ -43,7 +43,7 @@ export const ContentTextDetails = styled.div<ContentTextDetailsProps>`
 
 export const ImageDetails = styled.img `
     width: 100%;
-    height: 100%;
+    height: auto;
 `
 
 export const ContentBottom = styled.div `
