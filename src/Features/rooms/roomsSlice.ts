@@ -24,6 +24,7 @@ export const RoomsSlice = createSlice({
     reducers: {
         addRoom: (state, action: PayloadAction<Room>) => {
             state.rooms.push(action.payload);
+            state.room = action.payload
         },
         deleteRoom: (state, action: PayloadAction<number>) => {
             state.rooms = state.rooms.filter(room => room.id !== action.payload);
@@ -32,6 +33,7 @@ export const RoomsSlice = createSlice({
             const index = state.rooms.findIndex(room => room.id === action.payload.id);
             if (index !== -1) {
                 state.rooms[index] = action.payload;
+                state.room = action.payload;
             }
         },
     },

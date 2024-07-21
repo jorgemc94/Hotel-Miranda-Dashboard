@@ -16,7 +16,7 @@ import { User } from "../../types";
 import { AppDispatch, RootState } from "../../App/store";
 import { FourSquare } from "react-loading-indicators";
 
-export const UsersPage: React.FC = () => {
+export const UsersPage = () => {
     const [users, setUsers] = useState<User[]>([]);
     const usersStatus = useSelector((state: RootState) => getUsersStatus(state));
     const usersList = useSelector((state: RootState) => getUsersList(state));
@@ -137,20 +137,22 @@ export const UsersPage: React.FC = () => {
     return (
         <>
             {isLoading ?<FourSquare color="#32cd32" size="medium" text="" textColor="" />: 
-                <SectionOrder>
-                    <List>
-                        <ItemList onClick={handleClickAll}>All Employees</ItemList>
-                        <ItemList onClick={handleClickActive}>Active Employee</ItemList>
-                        <ItemList onClick={handleClickInactive}>Inactive Employee</ItemList>
-                    </List>
-                    <ButtonStyled styled='send' onClick={navigateNewUserHandle}>+ New User</ButtonStyled>
-                    <SelectStyled onChange={handleSortChange}>
-                        <option value='date'>Start Date</option>
-                        <option value='name'>Full Name</option>
-                    </SelectStyled>
-                </SectionOrder>
+                <>
+                    <SectionOrder>
+                        <List>
+                            <ItemList onClick={handleClickAll}>All Employees</ItemList>
+                            <ItemList onClick={handleClickActive}>Active Employee</ItemList>
+                            <ItemList onClick={handleClickInactive}>Inactive Employee</ItemList>
+                        </List>
+                        <ButtonStyled styled='send' onClick={navigateNewUserHandle}>+ New User</ButtonStyled>
+                        <SelectStyled onChange={handleSortChange}>
+                            <option value='date'>Start Date</option>
+                            <option value='name'>Full Name</option>
+                        </SelectStyled>
+                    </SectionOrder>
+                    <TableComponent columns={columns} data={users} detailPage='/user'/>
+                </>
             }
-            <TableComponent columns={columns} data={users} detailPage='/user'/>
         </>  
     );
 };
