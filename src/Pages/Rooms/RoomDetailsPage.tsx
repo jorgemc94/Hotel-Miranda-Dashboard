@@ -6,59 +6,47 @@ import { FiArrowLeft } from "react-icons/fi";
 import { getRoom, getRoomsError, getRoomsList, getRoomsStatus } from "../../Features/rooms/roomsSlice";
 import { RoomDetailsThunk } from "../../Features/rooms/roomsDetailsThunk";
 import { ContentDetails, ContentText, ImageDetails, SectionDetails, ContentTextDetails, TextDetails, ContentBottom } from "../../Components/styled/DetailsStyled";
+import { AppDispatch, RootState } from "../../App/store";
+import { Room } from "../../types";
+import { FourSquare } from "react-loading-indicators";
 
 export const RoomDetailsPage = () => {
-    const { id } = useParams();
-    const dispatchRedux = useDispatch();
+    const { id } = useParams<string>();
+    const dispatchRedux: AppDispatch = useDispatch();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
-    const room = useSelector(getRoom);
-    const roomStatus = useSelector(getRoomsStatus);
-    const roomError = useSelector(getRoomsError);
-    const [error, setError] = useState(null);
-    const roomsList = useSelector(getRoomsList);
+    const room = useSelector((state: RootState) => getRoom(state));
+    const roomStatus = useSelector((state: RootState) => getRoomsStatus(state));
+    const roomError = useSelector((state: RootState) => getRoomsError(state));
+    const roomsList = useSelector((state: RootState) => getRoomsList(state));
+    const [roomRender, setRoomRender] = useState<Room | null>(null)
 
     useEffect(() => {
-        if (roomStatus === 'idle') {
-            dispatchRedux(RoomDetailsThunk(id));
-        } else if (roomStatus === 'fulfilled') {
+        if (roomStatus === 'idle' || roomStatus === 'fulfilled') {
+            const numberId = Number(id);
+            dispatchRedux(RoomDetailsThunk({id: numberId, roomList : roomsList}))
+        }
+    }, [id, dispatchRedux, roomsList])
+
+    useEffect(() => {
+        if (roomStatus === 'fulfilled') {
             setIsLoading(false);
+            setRoomRender(room as Room);
         } else if (roomStatus === 'rejected') {
             setIsLoading(false);
-            setError(roomError);
+            console.log(roomError);
         }
-    }, [dispatchRedux, id, roomStatus, roomError]);
+    }, [roomStatus, roomError, room]);
 
     const navigateHandle = () => {
         navigate('/rooms');
     };
 
-    const initialFetch = async () => {
-        try {
-            await dispatchRedux(RoomDetailsThunk({id: id, roomsList: roomsList})).unwrap();
-            setIsLoading(false);
-        } catch (err) {
-            setError(err);
-            setIsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        initialFetch();
-    }, [id]);
-
-    if (error) {
-        return <p>Error: {error.message}</p>;
-    }
-
-    if (!room) {
-        return <p>No room found</p>;
-    }
-
     return (
         <>
             {isLoading ? 
-                <p>...loading...</p> : 
+                <FourSquare color="#32cd32" size="medium" text="" textColor="" />  : 
+                roomRender && (
                 <>
                     <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled>
                     <SectionDetails>
@@ -66,24 +54,25 @@ export const RoomDetailsPage = () => {
                             <ContentText>
                                 <ContentTextDetails>
                                     <TextDetails $title>Room Info</TextDetails>
-                                    <TextDetails>{room.roomType}</TextDetails>
+                                    <TextDetails>{roomRender.roomType}</TextDetails>
                                 </ContentTextDetails>
                                 <ContentTextDetails $right>
                                     <TextDetails $title>Price</TextDetails>
-                                    <TextDetails>${room.price}/night</TextDetails>
+                                    <TextDetails>${roomRender.price}/night</TextDetails>
                                 </ContentTextDetails>
                             </ContentText>
                             <TextDetails $title>Amenities</TextDetails>
                             <ContentBottom>
-                                {room.amenities && room.amenities.map((amenity, index) => (
+                                {roomRender.amenities && roomRender.amenities.map((amenity, index) => (
                                     <ButtonStyled key={index} styled='amenity'> {amenity} </ButtonStyled>
                                 ))}
                             </ContentBottom>
                         </ContentDetails>
-                        <ImageDetails src={room.photosArray[0]}/>
+                        <ImageDetails src={roomRender.photosArray[0]}/>
                     </SectionDetails>
                     
                 </>
+                )
             }
         </>
     );

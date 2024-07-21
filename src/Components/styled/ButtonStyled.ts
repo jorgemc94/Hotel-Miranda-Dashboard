@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ButtonStyled = styled.button <{styled: 'send' | 'edit' | 'available' | 'bookedRed' | 'progress' | "pending" | "canceled" | "pending" | "booked" | "viewBorder" | "view" | "refund"}> `
+export const ButtonStyled = styled.button <{styled: 'send' | 'edit' | 'available' | 'bookedRed' | 'progress' | "pending" | "canceled" | "pending" | "booked" | "viewBorder" | "view" | "refund" | "amenity"}> `
     font-size: 1rem;
     padding: 1em 0.6em;
     border-radius: 0.4em;

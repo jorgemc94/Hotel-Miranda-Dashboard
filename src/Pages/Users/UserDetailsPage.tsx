@@ -8,6 +8,7 @@ import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FiArrowLeft } from "react-icons/fi";
 import { AppDispatch, RootState } from "../../App/store";
 import { User } from "../../types";
+import { FourSquare } from "react-loading-indicators";
 
 export const UserDetailsPage = () => {
     const { id } = useParams<string>();
@@ -44,7 +45,7 @@ export const UserDetailsPage = () => {
     return (
         <>
             {isLoading ? 
-                <p>...loading...</p> : 
+                <FourSquare color="#32cd32" size="medium" text="" textColor="" />  : 
                 employee && (
                 <>
                     <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled> 

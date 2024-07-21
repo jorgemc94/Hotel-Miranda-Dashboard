@@ -57,8 +57,8 @@ export const ContactPage = () => {
         <>
              <SectionOrder>
                 <List>
-                    <ItemList onClick={handleClickAll}>Todos los Empleados</ItemList>
-                    <ItemList onClick={handleClickArchive}>Empleados Activos</ItemList>
+                    <ItemList onClick={handleClickAll}>All Contact</ItemList>
+                    <ItemList onClick={handleClickArchive}>Actives</ItemList>
                 </List>
             </SectionOrder>
             <TableComponent columns={columns} data={contact} />

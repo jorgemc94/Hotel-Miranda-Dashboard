@@ -17,6 +17,8 @@ import { UserDetailsPage } from './Pages/Users/UserDetailsPage';
 import { UserEditPage } from './Pages/Users/userEditPage';
 import { RoomDetailsPage } from './Pages/Rooms/RoomDetailsPage';
 import { RoomEditPage } from './Pages/Rooms/RoomEditPage';
+import { BookingDetailsPage } from './Pages/Bookings/BookingDetailsPage';
+import { BookingEditPage } from './Pages/Bookings/BookingEditPage';
 
 const rootElement = document.getElementById('root');
 
@@ -40,6 +42,9 @@ if (rootElement) {
                 <Route path='/user/newuser' element={<PrivateRoute><UserEditPage /></PrivateRoute>} />
                 <Route path='/contact' element={<PrivateRoute><ContactPage /></PrivateRoute>} />
                 <Route path='/bookings' element={<PrivateRoute><BookingsPage /></PrivateRoute>} />
+                <Route path='/booking/:id' element={<PrivateRoute><BookingDetailsPage /></PrivateRoute>} />
+                <Route path='/booking/edit/:id' element={<PrivateRoute><BookingEditPage /></PrivateRoute>} />
+                <Route path='/booking/newbooking' element={<PrivateRoute><BookingEditPage /></PrivateRoute>} />
               </Route>
             </Routes>
           </BrowserRouter>

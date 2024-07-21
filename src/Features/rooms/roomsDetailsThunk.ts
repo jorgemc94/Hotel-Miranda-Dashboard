@@ -1,17 +1,24 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { Room } from "../../types";
 
-
-const delay = (data) => {
+const delay = <T>(data: T): Promise<T> => {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(data);
-        }, 200);
+        }, 500);
     });
 };
 
-export const RoomDetailsThunk = createAsyncThunk('room/getRoom', async ({id, roomsList}) => {
-    const room = roomsList.find((room) => room.id == id)
-    console.log (room)
-    return room
-    
-});
+interface RoomDetailsPayload {
+    id: number;
+    roomList: Room[];
+}
+
+export const RoomDetailsThunk = createAsyncThunk<Room | undefined, RoomDetailsPayload>(
+    'room/getRoom',
+    async ({ id, roomList }: RoomDetailsPayload) => {
+        const room = roomList.find((room) => room.id === id);
+        await delay(room);
+        return room;
+    }
+);

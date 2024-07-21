@@ -11,13 +11,10 @@ import { User } from "../../types";
 import { SingleValue } from "react-select";
 import { SelectForm } from "../../Components/styled/SelectStyled";
 import Swal from 'sweetalert2';
-
-type Params = {
-    id: string;
-};
+import { FourSquare } from "react-loading-indicators";
 
 export const UserEditPage = () => {
-    const { id } = useParams<Params>();
+    const { id } = useParams<string>();
     const navigate = useNavigate();
     const dispatchRedux: AppDispatch = useDispatch();
     const user = useSelector((state: RootState) => getUser(state));
@@ -30,7 +27,7 @@ export const UserEditPage = () => {
         email: "",
         phone: "",
         date: "",
-        status: "",
+        status: "valid",
         position: { name: "Manager", description: "" },
         password: ""
     });
@@ -70,7 +67,7 @@ export const UserEditPage = () => {
         setUserEdit({ ...userEdit, [name]: value });
     };
 
-    const handleSelectChange = (selectedOption: SingleValue<{ value: "Manager" | "Room service" | "Reception" ; label: string }>) => {
+    const handleSelectChange = (selectedOption: SingleValue<{ value: "Manager" | "Room service" | "Reception"; label: string }>) => {
         if (selectedOption) {
             setUserEdit(prevState => ({
                 ...prevState,
@@ -115,10 +112,8 @@ export const UserEditPage = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (!user) {
-            return;
-        }
-        if (isEditPage) {
+        
+        if (isEditPage && user) {
             const updatedUser = { 
                 ...user, 
                 ...userEdit, 
@@ -134,7 +129,7 @@ export const UserEditPage = () => {
                 text: "Your file has been edited.",
                 icon: "success"
             });
-        } else {
+        } else if (!isEditPage) {
             const newUser: User = { 
                 ...userEdit, 
                 position: { 
@@ -158,7 +153,7 @@ export const UserEditPage = () => {
 
     return (
         <>
-            {isLoading ? <p>...Cargando</p> :
+            {isLoading ? <FourSquare color="#32cd32" size="medium" text="" textColor="" /> :
                 <>
                     <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled>
                     <SectionFormStyled>
@@ -177,10 +172,10 @@ export const UserEditPage = () => {
                             <InputStyled type="date" name="date" value={userEdit.date} onChange={handleChange} placeholder="Start Date" />
                             <LabelStyled>Status</LabelStyled>
                             <SelectForm
-                            name="status"
-                            options={optionStatus}
-                            value={optionStatus.find(option => option.value === userEdit.status)}
-                            onChange={(option) => handleSelectStatusChange(option as SingleValue<{ value: "valid" | "invalid" ; label: string }>)} 
+                                name="status"
+                                options={optionStatus}
+                                value={optionStatus.find(option => option.value === userEdit.status)}
+                                onChange={(option) => handleSelectStatusChange(option as SingleValue<{ value: "valid" | "invalid"; label: string }>)}
                             />
                             <LabelStyled>Description</LabelStyled>
                             <TextareaStyled name="position.description" value={userEdit.position.description} onChange={handleChange} placeholder="Description" />
@@ -189,7 +184,7 @@ export const UserEditPage = () => {
                                 name="activity"
                                 options={optionsActivity}
                                 value={optionsActivity.find(option => option.value === userEdit.position.name)}
-                                onChange={(option) => handleSelectChange(option as SingleValue<{ value: "Manager" | "Room service" | "Reception"; label: string }>)} 
+                                onChange={(option) => handleSelectChange(option as SingleValue<{ value: "Manager" | "Room service" | "Reception"; label: string }>)}
                             />
                             <ButtonStyled styled='send' type="submit">{isEditPage ? 'Save Changes' : 'New User'}</ButtonStyled>
                         </FormStyled>

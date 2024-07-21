@@ -12,7 +12,6 @@
       "amenities": [
           "Breakfast",
           "Grocery",
-          "Grocery",
           "Cleaning",
           "Shop Near"
       ],
@@ -58,8 +57,7 @@
       "amenities": [
           "Air conditioner",
           "Kitchen",
-          "TV",
-          "Kitchen"
+          "TV"
       ],
       "photosArray": [
           "https://img.freepik.com/free-photo/elegant-hotel-room-with-big-bed_1203-1494.jpg",
@@ -124,7 +122,6 @@
       "cancellation": "nisi officia Lorem labore duis non nisi et eu",
       "amenities": [
           "Shower",
-          "Shower",
           "TV",
           "Breakfast",
           "Towels"
@@ -149,7 +146,6 @@
       "amenities": [
           "Shower",
           "Kitchen",
-          "High speed WiFi",
           "Grocery",
           "High speed WiFi"
       ],
@@ -212,7 +208,6 @@
       "discount": 38,
       "cancellation": "enim excepteur irure quis reprehenderit ut amet quis sit laborum non labore tempor sunt veniam fugiat est id non",
       "amenities": [
-          "Cleaning",
           "Cleaning",
           "Beach views"
       ],

@@ -16,23 +16,27 @@ export interface User {
 
 
 export interface Room {
+    id: number;
+    roomNumber: number;
+    availability: "available" | "booked";
+    roomType: "Double Superior";
+    description: string;
+    offer: boolean;
+    price: number;
+    discount: number;
+    cancellation: string;
+    amenities: string[];
+    photosArray: string[];
+}
+
+
+export interface Booking {
+    fullName: string,
     id: number,
-    roomNumber: number,
-    availability: "available",
-    roomType: "Double Superior",
-    description: string,
-    offer: boolean,
-    price: number,
-    discount: number,
-    cancellation: string,
-    amenities: [
-        string
-    ],
-    photosArray: [
-        string,
-        string,
-        string,
-        string,
-        string
-    ]
+    bookDate: string,
+    checkIn: string,
+    checkOut: string,
+    specialRequest: string,
+    roomId: number,
+    status: "In progress" | "Check In" | "Check Out"
 }
