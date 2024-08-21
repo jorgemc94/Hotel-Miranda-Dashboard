@@ -1,8 +1,9 @@
+
 import React, { useContext, useState, FormEvent } from "react";
 import { LoginForm, TitleForm, Form, Label, Input, ButtonForm, LogoForm, AccessForm, TextError } from "./LoginStyled";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/userContext";
-import { login } from "../../Features/callAPI"; // Ajusta la ruta a tu archivo donde está la función login
+import { login } from "../../Features/callAPI";
 
 export const LoginPage: React.FC = () => {
     const userContext = useContext(UserContext);
@@ -19,10 +20,7 @@ export const LoginPage: React.FC = () => {
         const password = (event.target as HTMLFormElement).elements.namedItem('password') as HTMLInputElement;
 
         try {
-            // Llamar a la función de login
             const user = await login({ email: email.value, password: password.value });
-            
-            // Actualizar el estado del contexto y navegar
             dispatch({ type: 'LOGIN', payload: { name: user.name, email: user.email } });
             navigate('/');
         } catch (error) {
@@ -34,7 +32,7 @@ export const LoginPage: React.FC = () => {
         <LoginForm>
             <LogoForm src="src/assets/icon.png" alt="logo" />
             <TitleForm>Login</TitleForm>
-            <AccessForm>Email: jorgemc1294@gmail.com Password: 12345</AccessForm>
+            <AccessForm>Email:jorgemc1294@gmail.com Password:12345</AccessForm>
             {error && <TextError>{error}</TextError>}
             <Form onSubmit={handleSubmit}>
                 <Label>Email</Label>
