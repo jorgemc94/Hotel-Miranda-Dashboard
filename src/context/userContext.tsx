@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect, ReactNode, Dispatch } from "react";
+import React, { createContext, useEffect, useReducer, ReactNode, useContext } from "react";
 
 interface UserState {
     name: string | null;
@@ -6,51 +6,61 @@ interface UserState {
     isLoggedIn: boolean;
 }
 
-export interface User {
-    state: StateType;
-    dispatch: Dispatch<UserAction>;
+interface Login {
+    type: 'LOGIN';
+    payload: {
+        name: string;
+        email: string;
+    };
 }
 
-type StateType = {email: string } | null;
+interface Logout {
+    type: 'LOGOUT';
+}
 
-type UserAction =
-    | { type: "LOGIN"; payload: { name: string; email: string } }
-    | { type: "LOGOUT" }
-    | { type: "EDITUSER"; payload: { name: string; email: string } };
+interface EditUser {
+    type: 'EDITUSER';
+    payload: {
+        name?: string;
+        email?: string;
+    };
+}
+
+type Action = Login | Logout | EditUser;
 
 const getInitialState = (): UserState => {
     const initialState = localStorage.getItem('auth');
     if (initialState) {
-        return JSON.parse(initialState);
+        return JSON.parse(initialState) as UserState;
     }
     return {
         name: null,
         email: null,
-        isLoggedIn: false
+        isLoggedIn: false,
     };
 };
 
-const userReducer = (state: UserState, action: UserAction): UserState => {
+const userReducer = (state: UserState, action: Action): UserState => {
     switch (action.type) {
         case "LOGIN":
             return {
                 ...state,
                 name: action.payload.name,
                 email: action.payload.email,
-                isLoggedIn: true
+                isLoggedIn: true,
             };
         case "LOGOUT":
             return {
                 ...state,
                 name: null,
                 email: null,
-                isLoggedIn: false
+                isLoggedIn: false,
             };
         case "EDITUSER":
             return {
                 ...state,
-                name: action.payload.name,
-                email: action.payload.email
+                name: action.payload.name ?? state.name,
+                email: action.payload.email ?? state.email,
             };
         default:
             return state;
@@ -59,8 +69,16 @@ const userReducer = (state: UserState, action: UserAction): UserState => {
 
 export const UserContext = createContext<{
     state: UserState;
-    dispatch: React.Dispatch<UserAction>;
-} | null>(null);
+    dispatch: React.Dispatch<Action>;
+} | undefined>(undefined);
+
+export const useUserContext = () => {
+    const context = useContext(UserContext);
+    if (!context) {
+        throw new Error('useUserContext must be used within a UserContextProvider');
+    }
+    return context;
+};
 
 export const UserContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [state, dispatch] = useReducer(userReducer, getInitialState());
