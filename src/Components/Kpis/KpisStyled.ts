@@ -20,7 +20,7 @@ export const KpisText = styled.div `
 `
 
 interface KpisTextDetailsProps {
-    $number : boolean
+    $number? : boolean
 }
 
 export const KpisTextDetails = styled.p<KpisTextDetailsProps>`

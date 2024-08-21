@@ -1,10 +1,17 @@
-import React, { createContext, useReducer, useEffect, ReactNode } from "react";
+import React, { createContext, useReducer, useEffect, ReactNode, Dispatch } from "react";
 
 interface UserState {
     name: string | null;
     email: string | null;
     isLoggedIn: boolean;
 }
+
+export interface User {
+    state: StateType;
+    dispatch: Dispatch<UserAction>;
+}
+
+type StateType = {email: string } | null;
 
 type UserAction =
     | { type: "LOGIN"; payload: { name: string; email: string } }
