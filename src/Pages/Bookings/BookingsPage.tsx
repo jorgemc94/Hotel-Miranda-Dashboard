@@ -31,7 +31,6 @@ export const BookingsPage = () => {
     },[])
 
     useEffect(() => {
-        console.log(bookingsStatus)
         if (bookingsStatus === 'idle') {
             setIsLoading(false);
         } else if (bookingsStatus === 'fulfilled') {

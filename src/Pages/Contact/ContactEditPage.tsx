@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { editContact, addContact, getContact, getContactList } from "../../Features/contact/contactsSlice";
-import { ContactDetailsThunk } from "../../Features/contact/contactDetailsThunk";
+import { ContactThunk, addContactThunk, updateContactThunk } from "../../Features/contact/contactsThunk";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FormStyled, InputStyled, LabelStyled, SectionFormStyled, TextareaStyled } from "../../Components/styled/FormStyled";
 import { FiArrowLeft } from "react-icons/fi";
@@ -12,54 +11,77 @@ import { SingleValue } from "react-select";
 import { SelectForm } from "../../Components/styled/SelectStyled";
 import Swal from 'sweetalert2';
 import { FourSquare } from "react-loading-indicators";
+import { getContact, getContactsStatus } from "../../Features/contact/contactsSlice";
 
 export const ContactEditPage = () => {
     const { id } = useParams<string>();
     const navigate = useNavigate();
     const dispatchRedux: AppDispatch = useDispatch();
     const contact = useSelector((state: RootState) => getContact(state));
+    const contactsStatus = useSelector((state: RootState) => getContactsStatus(state));
     const contactsError = useSelector((state: RootState) => state.contacts.error);
-    const contactList = useSelector((state: RootState) => getContactList(state));
+
     const [contactEdit, setContactEdit] = useState<Contact>({
-        id: 0,
+        _id: 0,
         subject: "",
         comment: "",
         archived: "false",
         date: "",
         client: {
-            name:"",
-            email:"",
+            name: "",
+            email: "",
             phone: "",
             image: "",
         },
     });
+
     const [isLoading, setIsLoading] = useState(true);
     const isEditPage = Boolean(id);
 
     useEffect(() => {
-        const numberId = Number(id);
         const fetchContactDetails = async () => {
             if (isEditPage) {
                 try {
-                    await dispatchRedux(ContactDetailsThunk({ id: numberId, contactList }));
+                    await dispatchRedux(ContactThunk(id as string));
                 } catch (err) {
-                    console.log(contactsError);
+                    console.error(contactsError);
                 }
             }
             setIsLoading(false);
         };
-
         fetchContactDetails();
-    }, [id, dispatchRedux, isEditPage, contactsError, contactList]);
+    }, [id, dispatchRedux, isEditPage, contactsError]);
 
     useEffect(() => {
-        if (contact && isEditPage) {
-            setContactEdit({
-                ...contact,
-                client: { ...contact.client }
-            });
+        if (contactsStatus === 'pending') {
+            setIsLoading(true);
+        } else if (contactsStatus === 'fulfilled') {
+            if (isEditPage && contact) {
+                setContactEdit({
+                    ...contact,
+                    client: { ...contact.client }
+                });
+            } else if (!isEditPage) {
+                setContactEdit({
+                    _id: 0,
+                    subject: "",
+                    comment: "",
+                    archived: "false",
+                    date: "",
+                    client: {
+                        name: "",
+                        email: "",
+                        phone: "",
+                        image: "",
+                    },
+                });
+            }
+            setIsLoading(false);
+        } else if (contactsStatus === 'rejected') {
+            setIsLoading(false);
+            console.error(contactsError);
         }
-    }, [contact, isEditPage]);
+    }, [contactsStatus, contact, isEditPage, contactsError]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -69,7 +91,7 @@ export const ContactEditPage = () => {
                 client: { ...prevState.client, [name]: value }
             }));
         } else {
-            setContactEdit({ ...contactEdit, [name]: value });
+            setContactEdit(prevState => ({ ...prevState, [name]: value }));
         }
     };
 
@@ -89,17 +111,16 @@ export const ContactEditPage = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         try {
             if (isEditPage) {
-                await dispatchRedux(editContact(contactEdit));
+                await dispatchRedux(updateContactThunk(contactEdit));
                 Swal.fire({
                     title: "Edit Contact!",
                     text: "Your contact has been edited.",
                     icon: "success"
                 });
             } else {
-                await dispatchRedux(addContact(contactEdit));
+                await dispatchRedux(addContactThunk(contactEdit));
                 Swal.fire({
                     title: "New Contact!",
                     text: "Your contact has been added.",
@@ -128,27 +149,61 @@ export const ContactEditPage = () => {
                     <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled>
                     <SectionFormStyled>
                         <FormStyled onSubmit={handleSubmit}>
-                            <LabelStyled>ID</LabelStyled>
-                            <InputStyled type="number" name="id" value={contactEdit.id} onChange={handleChange} readOnly={isEditPage} placeholder="Id" />
                             <LabelStyled>Name</LabelStyled>
-                            <InputStyled type="text" name="name" value={contactEdit.client.name} onChange={handleChange} placeholder="Name" />
+                            <InputStyled
+                                type="text"
+                                name="name"
+                                value={contactEdit.client.name}
+                                onChange={handleChange}
+                                placeholder="Name"
+                            />
                             <LabelStyled>Email</LabelStyled>
-                            <InputStyled type="email" name="email" value={contactEdit.client.email} onChange={handleChange} placeholder="Email" />
+                            <InputStyled
+                                type="email"
+                                name="email"
+                                value={contactEdit.client.email}
+                                onChange={handleChange}
+                                placeholder="Email"
+                            />
                             <LabelStyled>Phone</LabelStyled>
-                            <InputStyled type="tel" name="phone" value={contactEdit.client.phone} onChange={handleChange} placeholder="Phone" />
+                            <InputStyled
+                                type="tel"
+                                name="phone"
+                                value={contactEdit.client.phone}
+                                onChange={handleChange}
+                                placeholder="Phone"
+                            />
                             <LabelStyled>Date</LabelStyled>
-                            <InputStyled type="date" name="date" value={contactEdit.date} onChange={handleChange} placeholder="Date" />
+                            <InputStyled
+                                type="date"
+                                name="date"
+                                value={contactEdit.date}
+                                onChange={handleChange}
+                                placeholder="Date"
+                            />
                             <LabelStyled>Subject</LabelStyled>
-                            <InputStyled type="text" name="subject" value={contactEdit.subject} onChange={handleChange} readOnly={isEditPage} placeholder="Subject" />
+                            <InputStyled
+                                type="text"
+                                name="subject"
+                                value={contactEdit.subject}
+                                onChange={handleChange}
+                                readOnly={isEditPage}
+                                placeholder="Subject"
+                            />
                             <LabelStyled>Archived</LabelStyled>
-                            <SelectForm 
+                            <SelectForm
                                 name="archived"
                                 options={optionsActivity}
                                 value={optionsActivity.find(option => option.value === contactEdit.archived)}
-                                onChange={(option) => handleSelectChange(option as SingleValue<{ value: "false" | "true" ; label: string }>)}
+                                onChange={(option) => handleSelectChange(option as SingleValue<{ value: "false" | "true"; label: string }>)}
                             />
                             <LabelStyled>Comment</LabelStyled>
-                            <TextareaStyled name="comment" value={contactEdit.comment} onChange={handleChange} placeholder="Comment" />
+                            <TextareaStyled
+                                name="comment"
+                                value={contactEdit.comment}
+                                onChange={handleChange}
+                                placeholder="Comment"
+                            />
                             <ButtonStyled styled='send' type="submit">{isEditPage ? 'Save Changes' : 'Add Contact'}</ButtonStyled>
                         </FormStyled>
                     </SectionFormStyled>

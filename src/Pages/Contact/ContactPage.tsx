@@ -1,15 +1,16 @@
 import { SectionOrder } from "../../Components/styled/OrderStyled";
 import { ItemList, List } from "../../Components/styled/LinkStyled";
+import { SelectStyled } from "../../Components/styled/SelectStyled";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { TableComponent } from "../../Components/Table/TableComponent";
 import { ImageTable, NameTable, SubtitleTable } from "../../Components/Table/TableStyled";
 import { Contact } from "../../types";
-import { deleteContact, getContactList, getContactsError, getContactsStatus } from "../../Features/contact/contactsSlice";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { getContactList, getContactsError, getContactsStatus } from "../../Features/contact/contactsSlice";
+import { useState, useEffect, ChangeEvent } from "react";
 import { AppDispatch, RootState } from "../../App/store";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { ContactThunk } from "../../Features/contact/contactsThunk";
+import { ContactsListThunk, deleteContactThunk } from "../../Features/contact/contactsThunk";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import Swal from 'sweetalert2';
@@ -29,8 +30,12 @@ export const ContactPage = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        dispatchRedux(ContactsListThunk());
+    }, [dispatchRedux]);
+
+    useEffect(() => {
         if (contactsStatus === 'idle') {
-            dispatchRedux(ContactThunk());
+            setIsLoading(false);
         } else if (contactsStatus === 'fulfilled') {
             setIsLoading(false);
             setAllContacts(contactsList);
@@ -39,7 +44,7 @@ export const ContactPage = () => {
             setIsLoading(false);
             setError(contactListError);
         }
-    }, [contactsStatus, contactsList, contactListError, dispatchRedux]);
+    }, [contactsStatus, contactsList, contactListError]);
 
     const columns = [
         { headerColumn: 'Photos', columnsData: 'photo', columnRenderer: (row: Contact) => <ImageTable styled='users' src={row.client.image} alt="User Photo" /> },
@@ -72,14 +77,14 @@ export const ContactPage = () => {
         { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row: Contact) => {
             return (
                 <>
-                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row.id)} /> 
-                    <CiEdit onClick={() => navigateEditHandle(row.id)} />
+                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row._id.toString())} /> 
+                    <CiEdit onClick={() => navigateEditHandle(row._id.toString())} />
                 </>
             )
         }}
     ];
 
-    const deleteHandle = (event: React.MouseEvent<SVGElement>, ContactId: number) => {
+    const deleteHandle = (event: React.MouseEvent<SVGElement>, contactId: string) => {
         event.stopPropagation();
         
         Swal.fire({
@@ -92,45 +97,80 @@ export const ContactPage = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                dispatchRedux(deleteContact(ContactId));
+                dispatchRedux(deleteContactThunk(contactId));
                 Swal.fire({
                     title: "Deleted!",
                     text: "Your file has been deleted.",
                     icon: "success"
                 });
-                setAllContacts((prevContacts) => prevContacts.filter(contact => contact.id !== ContactId));
+                setAllContacts((prevContacts) => prevContacts.filter(contact => contact._id.toString() !== contactId));
+                setFilteredContacts((prevContacts) => prevContacts.filter(contact => contact._id.toString() !== contactId));
             }
         });
     }
 
-    const navigateEditHandle = (ContactId: number) => {
-        navigate(`/contact/edit/${ContactId}`);
+    const navigateEditHandle = (contactId: string) => {
+        navigate(`/contact/edit/${contactId}`);
     };
 
+    const sortContactsHandler = (value: string) => {
+        let sortedContacts = [...filteredContacts];
+
+        if (value === 'date') {
+            sortedContacts = sortedContacts.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        } else if (value === 'name') {
+            sortedContacts = sortedContacts.sort((a, b) => a.client.name.localeCompare(b.client.name));
+        } else if (value === 'email') {
+            sortedContacts = sortedContacts.sort((a, b) => a.client.email.localeCompare(b.client.email));
+        } else if (value === 'phone') {
+            sortedContacts = sortedContacts.sort((a, b) => a.client.phone.localeCompare(b.client.phone));
+        } else {
+            sortedContacts = sortedContacts.sort((a, b) => a._id.toString().localeCompare(b._id.toString()));
+        }
+
+        setFilteredContacts(sortedContacts);
+    };
+
+    const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        const value = event.target.value;
+        sortContactsHandler(value);
+    };
 
     const handleClickAll = () => {
         setFilteredContacts(allContacts);
     };
 
-    const handleClickPublish = () => {
+    const handleClickPublished = () => {
+        const publishedContacts = allContacts.filter(contact => contact.archived === 'false');
+        setFilteredContacts(publishedContacts);
+    };
+
+    const handleClickArchived = () => {
         const archivedContacts = allContacts.filter(contact => contact.archived === 'true');
         setFilteredContacts(archivedContacts);
     };
 
     return (
         <>
-           {isLoading ? <FourSquare color="#32cd32" size="medium" text="" textColor="" /> :
-            <>
-                 <SectionOrder>
-                    <List>
-                        <ItemList onClick={handleClickAll}>All Contacts</ItemList>
-                        <ItemList onClick={handleClickPublish}>Publish</ItemList>
-                    </List>
-                    <ButtonStyled styled='send' onClick={() => navigate('/contact/newcontact')}>+ New Contact</ButtonStyled>
-                </SectionOrder>
-                <TableComponent columns={columns} data={filteredContacts} detailPage='/contact' />
-            </>
-           }
+            {isLoading ? <FourSquare color="#32cd32" size="medium" text="" textColor="" /> : 
+                <>
+                    <SectionOrder>
+                        <List>
+                            <ItemList onClick={handleClickAll}>All Contacts</ItemList>
+                            <ItemList onClick={handleClickPublished}>Published</ItemList>
+                            <ItemList onClick={handleClickArchived}>Archived</ItemList>
+                        </List>
+                        <ButtonStyled styled='send' onClick={() => navigate('/contact/newcontact')}>+ New Contact</ButtonStyled>
+                        <SelectStyled onChange={handleSelectChange}>
+                            <option value='date'>Date</option>
+                            <option value='name'>Name</option>
+                            <option value='email'>Email</option>
+                            <option value='phone'>Phone</option>
+                        </SelectStyled>
+                    </SectionOrder>
+                    <TableComponent columns={columns} data={filteredContacts} detailPage='/contact' />
+                </>
+            }
         </>
     );
 };

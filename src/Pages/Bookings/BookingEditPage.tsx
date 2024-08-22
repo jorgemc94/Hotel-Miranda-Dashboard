@@ -43,12 +43,10 @@ export const BookingEditPage = () => {
 
     useEffect(() => {
         if (bookingStatus === 'pending') {
-            setIsLoading(true)
+            setIsLoading(true);
         } else if (bookingStatus === 'fulfilled' && isEditPage) {
-            setBookingEdit({
-                ...booking
-            });
-            setIsLoading(false)
+            setBookingEdit(booking);
+            setIsLoading(false);
         } else if (bookingStatus === 'rejected') {
             setIsLoading(false);
             console.error(bookingsError);
@@ -56,8 +54,11 @@ export const BookingEditPage = () => {
     }, [bookingStatus, isEditPage, booking, bookingsError]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = event.target;
-        setBookingEdit({ ...bookingEdit, [name]: value });
+        const { name, value, type } = event.target;
+        setBookingEdit(prevState => ({
+            ...prevState,
+            [name]: type === 'number' ? Number(value) : value
+        }));
     };
 
     const handleSelectChange = (selectedOption: SingleValue<{ value: "In progress" | "Check In" | "Check Out"; label: string }>) => {
@@ -120,7 +121,7 @@ export const BookingEditPage = () => {
                             <InputStyled
                                 type="text"
                                 name="fullName"
-                                value={isEditPage ? bookingEdit.fullName : ""}
+                                value={bookingEdit.fullName}
                                 onChange={handleChange}
                                 placeholder="Full Name"
                             />
@@ -128,7 +129,7 @@ export const BookingEditPage = () => {
                             <InputStyled
                                 type="text"
                                 name="bookDate"
-                                value={isEditPage ? bookingEdit.bookDate : ""}
+                                value={bookingEdit.bookDate}
                                 onChange={handleChange}
                                 placeholder="Book Date"
                             />
@@ -136,7 +137,7 @@ export const BookingEditPage = () => {
                             <InputStyled
                                 type="date"
                                 name="checkIn"
-                                value={isEditPage ? bookingEdit.checkIn : ""}
+                                value={bookingEdit.checkIn}
                                 onChange={handleChange}
                                 placeholder="Check In"
                             />
@@ -144,7 +145,7 @@ export const BookingEditPage = () => {
                             <InputStyled
                                 type="date"
                                 name="checkOut"
-                                value={isEditPage ? bookingEdit.checkOut : ""}
+                                value={bookingEdit.checkOut}
                                 onChange={handleChange}
                                 placeholder="Check Out"
                             />
@@ -152,9 +153,8 @@ export const BookingEditPage = () => {
                             <InputStyled
                                 type="number"
                                 name="roomId"
-                                value={isEditPage ? bookingEdit.roomId : 0}
+                                value={bookingEdit.roomId || ""}
                                 onChange={handleChange}
-                                readOnly={isEditPage}
                                 placeholder="Room Id"
                             />
                             <LabelStyled>Status</LabelStyled>
@@ -167,7 +167,7 @@ export const BookingEditPage = () => {
                             <LabelStyled>Special Request</LabelStyled>
                             <TextareaStyled
                                 name="specialRequest"
-                                value={isEditPage ? bookingEdit.specialRequest : ""}
+                                value={bookingEdit.specialRequest}
                                 onChange={handleChange}
                                 placeholder="Description"
                             />

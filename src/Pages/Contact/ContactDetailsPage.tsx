@@ -5,33 +5,35 @@ import { ContentDetails, ContentText, ImageDetails, SectionDetails, TextDetails,
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FiArrowLeft } from "react-icons/fi";
 import { AppDispatch, RootState } from "../../App/store";
-import { Contact } from "../../types";
 import { FourSquare } from "react-loading-indicators";
-import { getContact, getContactList, getContactsError, getContactsStatus } from "../../Features/contact/contactsSlice";
-import { ContactDetailsThunk } from "../../Features/contact/contactDetailsThunk";
+import { getContact, getContactsError, getContactsStatus } from "../../Features/contact/contactsSlice";
+import { ContactThunk } from "../../Features/contact/contactsThunk";
+import { Contact } from "../../types";
 
 export const ContactDetailsPage = () => {
     const { id } = useParams<string>();
     const dispatchRedux: AppDispatch = useDispatch();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
+    
     const contact = useSelector((state: RootState) => getContact(state));
     const contactStatus = useSelector((state: RootState) => getContactsStatus(state));
     const contactError = useSelector((state: RootState) => getContactsError(state));
-    const contactsList = useSelector((state: RootState) => getContactList(state));
+    
     const [renderContact, setRenderContact] = useState<Contact | null>(null);
 
     useEffect(() => {
-        if (contactStatus === 'idle' || contactStatus === 'fulfilled') {
-            const numberId = Number(id);
-            dispatchRedux(ContactDetailsThunk({ id: numberId, contactList: contactsList }));
+        if (id) {
+            dispatchRedux(ContactThunk(id));
         }
-    }, [id, dispatchRedux, contactsList, contactStatus]);
+    }, [id, dispatchRedux]);
 
     useEffect(() => {
-        if (contactStatus === 'fulfilled') {
+        if (contactStatus === 'pending') {
+            setIsLoading(true);
+        } else if (contactStatus === 'fulfilled' && contact) {
+            setRenderContact(contact);
             setIsLoading(false);
-            setRenderContact(contact as Contact);
         } else if (contactStatus === 'rejected') {
             setIsLoading(false);
             console.error(contactError);
@@ -52,7 +54,7 @@ export const ContactDetailsPage = () => {
                     <SectionDetails>
                         <ContentDetails>
                             <TextDetails $title>{renderContact.client.name}</TextDetails>
-                            <TextDetails>{renderContact.id}</TextDetails>
+                            <TextDetails>{renderContact._id}</TextDetails>
                             <ContentText>
                                 <ContentTextDetails>
                                     <TextDetails $title>Email</TextDetails>
