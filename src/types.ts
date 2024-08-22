@@ -32,7 +32,7 @@ export interface Room {
 
 export interface Booking {
     fullName: string,
-    id: number,
+    _id: number,
     bookDate: string,
     checkIn: string,
     checkOut: string,

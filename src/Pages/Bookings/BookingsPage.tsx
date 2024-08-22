@@ -6,11 +6,11 @@ import { TableComponent } from "../../Components/Table/TableComponent";
 import { SubtitleTable } from "../../Components/Table/TableStyled";
 import { useState, useEffect, ChangeEvent } from "react";
 import { Booking } from "../../types";
-import { deleteBooking, getBookingList, getBookingsError, getBookingsStatus } from "../../Features/booking/bookingsSlice";
+import { getBookingList, getBookingsError, getBookingsStatus } from "../../Features/booking/bookingsSlice";
 import { AppDispatch, RootState } from "../../App/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { BookingsThunk } from "../../Features/booking/bookingsThunk";
+import { BookingsListThunk, deleteBookingThunk } from "../../Features/booking/bookingsThunk";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import Swal from 'sweetalert2';
@@ -29,9 +29,10 @@ export const BookingsPage = () => {
 
     useEffect(() => {
         if (bookingsStatus === 'idle') {
-            dispatchRedux(BookingsThunk());
+            dispatchRedux(BookingsListThunk());
         } else if (bookingsStatus === 'fulfilled') {
             setIsLoading(false);
+            console.log(bookingsList)
             setBookings(bookingsList);
         } else if (bookingsStatus === 'rejected') {
             setIsLoading(false);
@@ -59,14 +60,14 @@ export const BookingsPage = () => {
         { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row: Booking) => {
             return (
                 <>
-                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row.id)} /> 
-                    <CiEdit onClick={() => navigateEditHandle(row.id)} />
+                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row._id.toString())} /> 
+                    <CiEdit onClick={() => navigateEditHandle(row._id)} />
                 </>
             )
         }}
     ];
 
-    const deleteHandle = (event: React.MouseEvent<SVGElement>, bookingID: number) => {
+    const deleteHandle = (event: React.MouseEvent<SVGElement>, bookingID: string) => {
         event.stopPropagation();
         
         Swal.fire({
@@ -79,13 +80,13 @@ export const BookingsPage = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                dispatchRedux(deleteBooking(bookingID));
+                dispatchRedux(deleteBookingThunk(bookingID));
                 Swal.fire({
                     title: "Deleted!",
                     text: "Your file has been deleted.",
                     icon: "success"
                 });
-                setBookings((prevBookings) => prevBookings.filter(booking => booking.id !== bookingID));
+                setBookings((prevBookings) => prevBookings.filter(booking => booking._id.toString() !== bookingID));
             }
         });
     }
@@ -106,7 +107,7 @@ export const BookingsPage = () => {
         } else if (value === 'checkOut') {
             sortedBookings = sortedBookings.sort((a, b) => new Date(a.checkOut).getTime() - new Date(b.checkOut).getTime());
         } else {
-            sortedBookings = sortedBookings.sort((a, b) => a.id - b.id);
+            sortedBookings = sortedBookings.sort((a, b) => a._id - b._id);
         }
 
         setBookings(sortedBookings);
@@ -115,6 +116,7 @@ export const BookingsPage = () => {
     const handleBookingsChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
         sortBookingsHandler(value);
+        console.log(value)
     };
 
     const handleClickAll = () => {

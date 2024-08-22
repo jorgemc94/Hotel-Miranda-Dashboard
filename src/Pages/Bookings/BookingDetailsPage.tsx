@@ -5,12 +5,10 @@ import { ContentDetails, ContentText, SectionDetails, TextDetails, ContentTextDe
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FiArrowLeft } from "react-icons/fi";
 import { AppDispatch, RootState } from "../../App/store";
-import { Booking, Room } from "../../types";
+import { Booking } from "../../types";
 import { FourSquare } from "react-loading-indicators";
-import { getBooking, getBookingList, getBookingsError, getBookingsStatus } from "../../Features/booking/bookingsSlice";
-import { BookingDetailsThunk } from "../../Features/booking/bookingsDetailsThunk";
-import { getRoom, getRoomsStatus, getRoomsError, getRoomsList } from "../../Features/rooms/roomsSlice";
-import { RoomDetailsThunk } from "../../Features/rooms/roomsDetailsThunk";
+import { getBooking, getBookingsError, getBookingsStatus } from "../../Features/booking/bookingsSlice";
+import { BookingThunk } from "../../Features/booking/bookingsThunk";
 
 export const BookingDetailsPage = () => {
     const { id } = useParams<string>();
@@ -20,47 +18,38 @@ export const BookingDetailsPage = () => {
     const booking = useSelector((state: RootState) => getBooking(state));
     const bookingStatus = useSelector((state: RootState) => getBookingsStatus(state));
     const bookingsError = useSelector((state: RootState) => getBookingsError(state));
-    const bookingsList = useSelector((state: RootState) => getBookingList(state));
     const [renderBooking, setRenderBooking] = useState<Booking | null>(null);
-    const room = useSelector((state: RootState) => getRoom(state));
-    const roomStatus = useSelector((state: RootState) => getRoomsStatus(state));
-    const roomError = useSelector((state: RootState) => getRoomsError(state));
-    const roomsList = useSelector((state: RootState) => getRoomsList(state));
-    const [roomRender, setRoomRender] = useState<Room | null>(null);
 
     useEffect(() => {
-        const numberId = Number(id);
-        if (bookingStatus === 'idle' || bookingStatus === 'fulfilled') {
-            dispatchRedux(BookingDetailsThunk({ id: numberId, bookingList: bookingsList }));
-        }
-    }, [id, dispatchRedux, bookingStatus, bookingsList]);
+        dispatchRedux(BookingThunk(id as string));
+    },[])
 
     useEffect(() => {
-        if (bookingStatus === 'fulfilled' && booking) {
-            setRenderBooking(booking);
-            setIsLoading(false);
+        if (bookingStatus === 'pending') {
+            setIsLoading(true)
+        } else if (bookingStatus === 'fulfilled') {
+            setRenderBooking(booking)
+            //dispatchRedux(RoomThunk(id as string));
+            setIsLoading(false)//cuando haga el useEffect de rooms deberá ser true
+            console.log(booking)
         } else if (bookingStatus === 'rejected') {
             setIsLoading(false);
             console.error(bookingsError);
         }
-    }, [bookingStatus, booking, bookingsError]);
+    }, [bookingStatus]);
 
-    useEffect(() => {
-        if (renderBooking && (roomStatus === 'idle' || roomStatus === 'fulfilled')) {
-            const roomId = renderBooking.roomId;
-            dispatchRedux(RoomDetailsThunk({ id: roomId, roomList: roomsList }));
-        }
-    }, [renderBooking, dispatchRedux, roomStatus, roomsList]);
-
-    useEffect(() => {
-        if (roomStatus === 'fulfilled') {
-            setRoomRender(room as Room);
+    /*useEffect(() => {
+        if (bookingStatus === 'pending') {
+            setIsLoading(true)
+        } else if (bookingStatus === 'fulfilled') {
+            setRenderBooking(booking)
+            setIsLoading(false)
+            console.log(booking)
+        } else if (bookingStatus === 'rejected') {
             setIsLoading(false);
-        } else if (roomStatus === 'rejected') {
-            setIsLoading(false);
-            console.log(roomError);
+            console.error(bookingsError);
         }
-    }, [roomStatus, roomError, room]);
+    }, [bookingStatus]); cambiarlo para hacer las room*/
 
     const navigateHandle = () => {
         navigate('/bookings');
@@ -71,7 +60,7 @@ export const BookingDetailsPage = () => {
             {isLoading ? (
                 <FourSquare color="#32cd32" size="medium" text="" textColor="" />
             ) : (
-                renderBooking && roomRender && (
+                renderBooking &&(
                     <>
                         <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled> 
                         <SectionDetails>
@@ -87,24 +76,7 @@ export const BookingDetailsPage = () => {
                                         <TextDetails>{renderBooking.checkOut}</TextDetails>
                                     </ContentTextDetails>
                                 </ContentText>
-                                <ContentText>
-                                    <ContentTextDetails>
-                                        <TextDetails $title>Room Info</TextDetails>
-                                        <TextDetails>{roomRender.roomType}/{roomRender.roomNumber}</TextDetails>
-                                    </ContentTextDetails>
-                                    <ContentTextDetails $right>
-                                        <TextDetails $title>Price</TextDetails>
-                                        <TextDetails>{roomRender.price}€/night</TextDetails>
-                                    </ContentTextDetails>
-                                </ContentText>
-                                <TextDetails $title>Amenities</TextDetails>
-                                <ContentBottom>
-                                    {roomRender.amenities && roomRender.amenities.map((amenity, index) => (
-                                    <ButtonStyled key={index} styled='amenity'> {amenity} </ButtonStyled>
-                                    ))}
-                                </ContentBottom>
                             </ContentDetails>
-                            <ImageDetails src={roomRender.photosArray[0]}/>
                         </SectionDetails>
                     </>
                 )

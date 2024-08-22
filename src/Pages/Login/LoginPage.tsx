@@ -21,7 +21,7 @@ export const LoginPage: React.FC = () => {
 
         try {
             const user = await login({ email: email.value, password: password.value });
-            dispatch({ type: 'LOGIN', payload: { name: user.name, email: user.email } });
+            dispatch({ type: 'LOGIN', payload: { password: user.password, email: user.email, name: user.name, photo: user.photo } });
             navigate('/');
         } catch (error) {
             setError('Incorrect username or password');

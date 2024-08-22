@@ -22,6 +22,7 @@ export const TableComponent: React.FC<TableComponentProps> = ({ columns, data, d
 
     const createPagination = (array: any[], size: number) => {
         const aux: any[][] = [];
+        console.log(array)
         for (let i = 0; i < array.length; i += size)
             aux.push(array.slice(i, i + size));
         return aux;
@@ -41,6 +42,8 @@ export const TableComponent: React.FC<TableComponentProps> = ({ columns, data, d
     useEffect(() => {
         setPages(createPagination(data, pageSize));
         setNum(0);
+        console.log(data)
+        console.log(pages)
     }, [data]);
 
     const clickDetailsHandle = (id: number) => {
@@ -65,7 +68,7 @@ export const TableComponent: React.FC<TableComponentProps> = ({ columns, data, d
                 </thead>
                 <tbody>
                     {pages[num]?.map((row: any) => (
-                        <tr key={row.id} onClick={() => clickDetailsHandle(row.id)}>
+                        <tr key={row._id} onClick={() => clickDetailsHandle(row._id)}>
                             {columns.map((col, colIndex) => (
                                 <ContentTable 
                                     key={colIndex} 

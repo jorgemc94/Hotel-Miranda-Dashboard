@@ -1,7 +1,7 @@
 
 const API_URL= import.meta.env.VITE_API_URL
 
-export async function backendAPI(path: string, method: 'GET', data: any = null) {
+export async function backendAPI(path: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', data: any = null) {
     const token = localStorage.getItem('TOKEN_KEY')
     try {
         const response = await fetch(`${API_URL}${path}`, {

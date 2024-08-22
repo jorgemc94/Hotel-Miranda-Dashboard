@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { editBooking, addBooking, getBooking, getBookingList } from "../../Features/booking/bookingsSlice";
-import { BookingDetailsThunk } from "../../Features/booking/bookingsDetailsThunk";
+import { updateBookingThunk, addBookingThunk, BookingThunk, BookingsListThunk } from "../../Features/booking/bookingsThunk";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FormStyled, InputStyled, LabelStyled, SectionFormStyled, TextareaStyled } from "../../Components/styled/FormStyled";
 import { FiArrowLeft } from "react-icons/fi";
@@ -12,17 +11,18 @@ import { SingleValue } from "react-select";
 import { SelectForm } from "../../Components/styled/SelectStyled";
 import Swal from 'sweetalert2';
 import { FourSquare } from "react-loading-indicators";
+import { getBooking, getBookingsStatus } from "../../Features/booking/bookingsSlice";
 
 export const BookingEditPage = () => {
+    const bookingStatus = useSelector((state: RootState) => getBookingsStatus(state));
     const { id } = useParams<string>();
     const navigate = useNavigate();
     const dispatchRedux: AppDispatch = useDispatch();
-    const booking = useSelector((state: RootState) => getBooking(state));
+    const booking: Booking = useSelector((state: RootState) => getBooking(state));
     const bookingsError = useSelector((state: RootState) => state.bookings.error);
-    const bookingList = useSelector((state: RootState) => getBookingList(state))
     const [bookingEdit, setBookingEdit] = useState<Booking>({
         fullName: "",
-        id: 0,
+        _id: 0,
         bookDate: "",
         checkIn: "",
         checkOut: "",
@@ -33,12 +33,11 @@ export const BookingEditPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const isEditPage = Boolean(id);
 
-    useEffect(() => {
-        const numberId = Number(id);
+   /* useEffect(() => {
         const fetchBookingDetails = async () => {
             if (isEditPage) {
                 try {
-                    await dispatchRedux(BookingDetailsThunk({ id: numberId, bookingList }));
+                    await dispatchRedux(BookingThunk(id as string));
                 } catch (err) {
                     console.log(bookingsError);
                 }
@@ -55,7 +54,26 @@ export const BookingEditPage = () => {
                 ...booking
             });
         }
-    }, [booking, isEditPage]);
+    }, [booking, isEditPage]);*/
+
+    useEffect(() => {
+        dispatchRedux(BookingThunk(id as string));
+    },[])
+
+    useEffect(() => {
+        if (bookingStatus === 'pending') {
+            setIsLoading(true)
+        } else if (bookingStatus === 'fulfilled') {
+            setBookingEdit({
+                ...booking
+            });
+            setIsLoading(false)
+            console.log(booking)
+        } else if (bookingStatus === 'rejected') {
+            setIsLoading(false);
+            console.error(bookingsError);
+        }
+    }, [bookingStatus])
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -82,14 +100,15 @@ export const BookingEditPage = () => {
 
         try {
             if (isEditPage) {
-                await dispatchRedux(editBooking(bookingEdit));
+                console.log(bookingEdit)
+                await dispatchRedux(updateBookingThunk(bookingEdit));
                 Swal.fire({
                     title: "Edit Booking!",
                     text: "Your booking has been edited.",
                     icon: "success"
                 });
             } else {
-                await dispatchRedux(addBooking(bookingEdit));
+                await dispatchRedux(addBookingThunk(bookingEdit));
                 Swal.fire({
                     title: "New Booking!",
                     text: "Your booking has been added.",
@@ -118,8 +137,6 @@ export const BookingEditPage = () => {
                     <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled>
                     <SectionFormStyled>
                         <FormStyled onSubmit={handleSubmit}>
-                            <LabelStyled>ID</LabelStyled>
-                            <InputStyled type="number" name="id" value={bookingEdit.id} onChange={handleChange} readOnly={isEditPage} placeholder="Id" />
                             <LabelStyled>Full Name</LabelStyled>
                             <InputStyled type="text" name="fullName" value={bookingEdit.fullName} onChange={handleChange} placeholder="Full Name" />
                             <LabelStyled>Book Date</LabelStyled>

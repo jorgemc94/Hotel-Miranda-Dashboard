@@ -3,6 +3,8 @@ import React, { createContext, useEffect, useReducer, ReactNode, useContext } fr
 interface UserState {
     name: string | null;
     email: string | null;
+    password: string | null;
+    photo: string | null;
     isLoggedIn: boolean;
 }
 
@@ -11,6 +13,8 @@ interface Login {
     payload: {
         name: string;
         email: string;
+        password: string;
+        photo: string;
     };
 }
 
@@ -22,7 +26,9 @@ interface EditUser {
     type: 'EDITUSER';
     payload: {
         name?: string;
-        email?: string;
+        email: string;
+        password: string;
+        photo?: string;
     };
 }
 
@@ -36,6 +42,8 @@ const getInitialState = (): UserState => {
     return {
         name: null,
         email: null,
+        password: null,
+        photo: null,
         isLoggedIn: false,
     };
 };
@@ -47,6 +55,8 @@ const userReducer = (state: UserState, action: Action): UserState => {
                 ...state,
                 name: action.payload.name,
                 email: action.payload.email,
+                password: action.payload.password,
+                photo: action.payload.photo,
                 isLoggedIn: true,
             };
         case "LOGOUT":
@@ -54,6 +64,8 @@ const userReducer = (state: UserState, action: Action): UserState => {
                 ...state,
                 name: null,
                 email: null,
+                password: null,
+                photo: null,
                 isLoggedIn: false,
             };
         case "EDITUSER":
@@ -61,6 +73,8 @@ const userReducer = (state: UserState, action: Action): UserState => {
                 ...state,
                 name: action.payload.name ?? state.name,
                 email: action.payload.email ?? state.email,
+                password: action.payload.password ?? state.password,
+                photo: action.payload.photo ?? state.photo
             };
         default:
             return state;
