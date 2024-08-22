@@ -26,10 +26,14 @@ export const BookingsPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    useEffect(() => {
+        dispatchRedux(BookingsListThunk());
+    },[])
 
     useEffect(() => {
+        console.log(bookingsStatus)
         if (bookingsStatus === 'idle') {
-            dispatchRedux(BookingsListThunk());
+            setIsLoading(false);
         } else if (bookingsStatus === 'fulfilled') {
             setIsLoading(false);
             console.log(bookingsList)

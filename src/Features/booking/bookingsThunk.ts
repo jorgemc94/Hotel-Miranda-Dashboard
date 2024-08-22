@@ -7,22 +7,22 @@ export const BookingsListThunk = createAsyncThunk('booking/getBookings', async (
     return bookings;
 });
 
-export const BookingThunk = createAsyncThunk('booking/getBooking', async (id:string) => {
+export const BookingThunk = createAsyncThunk('booking/getBooking', async (id: string) => {
     const booking = await (backendAPI(`/bookings/${id}`, 'GET')) as Booking;
-    return booking
-})
+    return booking;
+});
 
-export const addBookingThunk = createAsyncThunk('booking/postBooking', async(bookingData: Partial<Booking>) => {
-    const addBooking = await (backendAPI('/bookings/newBooking', 'POST', bookingData)) as Booking
-    return addBooking
-})
+export const addBookingThunk = createAsyncThunk('booking/postBooking', async (bookingData: Partial<Booking>) => {
+    const addBooking = await (backendAPI('/bookings/newBooking', 'POST', bookingData)) as Booking;
+    return addBooking;
+});
 
 export const updateBookingThunk = createAsyncThunk('booking/putBooking', async (bookingData: Booking) => {
-    console.log(bookingData)
-    const updateBooking = await (backendAPI(`/bookings/update/${bookingData._id}`, 'PUT', bookingData)) as Booking
-    console.log(updateBooking)
-    return updateBooking
-})
+    console.log(bookingData);
+    const updateBooking = await (backendAPI(`/bookings/${bookingData._id}`, 'PUT', bookingData)) as Booking;
+    console.log(updateBooking);
+    return updateBooking;
+});
 
 export const deleteBookingThunk = createAsyncThunk('booking/deleteBooking', async (id: string) => {
     const deleteBooking = await (backendAPI(`/bookings/delete/${id}`, 'DELETE')) as Booking;

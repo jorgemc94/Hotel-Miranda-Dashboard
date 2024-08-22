@@ -55,6 +55,7 @@ export const BookingsSlice = createSlice({
                 state.error = action.error.message || null;
             })
             .addCase(addBookingThunk.fulfilled, (state, action: PayloadAction<Booking> ) => {
+                state.status = 'fulfilled'
                 state.bookings.push(action.payload);
                 state.booking = action.payload;
             })

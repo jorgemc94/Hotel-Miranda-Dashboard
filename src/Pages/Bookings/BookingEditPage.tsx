@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { updateBookingThunk, addBookingThunk, BookingThunk, BookingsListThunk } from "../../Features/booking/bookingsThunk";
+import { updateBookingThunk, addBookingThunk, BookingThunk } from "../../Features/booking/bookingsThunk";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FormStyled, InputStyled, LabelStyled, SectionFormStyled, TextareaStyled } from "../../Components/styled/FormStyled";
 import { FiArrowLeft } from "react-icons/fi";
@@ -33,47 +33,27 @@ export const BookingEditPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const isEditPage = Boolean(id);
 
-   /* useEffect(() => {
-        const fetchBookingDetails = async () => {
-            if (isEditPage) {
-                try {
-                    await dispatchRedux(BookingThunk(id as string));
-                } catch (err) {
-                    console.log(bookingsError);
-                }
-            }
+    useEffect(() => {
+        if (isEditPage) {
+            dispatchRedux(BookingThunk(id as string));
+        } else {
             setIsLoading(false);
-        };
-
-        fetchBookingDetails();
-    }, [id, dispatchRedux, isEditPage, bookingsError]);
-
-    useEffect(() => {
-        if (booking && isEditPage) {
-            setBookingEdit({
-                ...booking
-            });
         }
-    }, [booking, isEditPage]);*/
-
-    useEffect(() => {
-        dispatchRedux(BookingThunk(id as string));
-    },[])
+    }, [id, dispatchRedux, isEditPage]);
 
     useEffect(() => {
         if (bookingStatus === 'pending') {
             setIsLoading(true)
-        } else if (bookingStatus === 'fulfilled') {
+        } else if (bookingStatus === 'fulfilled' && isEditPage) {
             setBookingEdit({
                 ...booking
             });
             setIsLoading(false)
-            console.log(booking)
         } else if (bookingStatus === 'rejected') {
             setIsLoading(false);
             console.error(bookingsError);
         }
-    }, [bookingStatus])
+    }, [bookingStatus, isEditPage, booking, bookingsError]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -100,7 +80,6 @@ export const BookingEditPage = () => {
 
         try {
             if (isEditPage) {
-                console.log(bookingEdit)
                 await dispatchRedux(updateBookingThunk(bookingEdit));
                 Swal.fire({
                     title: "Edit Booking!",
@@ -138,15 +117,46 @@ export const BookingEditPage = () => {
                     <SectionFormStyled>
                         <FormStyled onSubmit={handleSubmit}>
                             <LabelStyled>Full Name</LabelStyled>
-                            <InputStyled type="text" name="fullName" value={bookingEdit.fullName} onChange={handleChange} placeholder="Full Name" />
+                            <InputStyled
+                                type="text"
+                                name="fullName"
+                                value={isEditPage ? bookingEdit.fullName : ""}
+                                onChange={handleChange}
+                                placeholder="Full Name"
+                            />
                             <LabelStyled>Book Date</LabelStyled>
-                            <InputStyled type="text" name="bookDate" value={bookingEdit.bookDate} onChange={handleChange} placeholder="Book Date" />
+                            <InputStyled
+                                type="text"
+                                name="bookDate"
+                                value={isEditPage ? bookingEdit.bookDate : ""}
+                                onChange={handleChange}
+                                placeholder="Book Date"
+                            />
                             <LabelStyled>Check In</LabelStyled>
-                            <InputStyled type="date" name="checkIn" value={bookingEdit.checkIn} onChange={handleChange} placeholder="Check In" />
+                            <InputStyled
+                                type="date"
+                                name="checkIn"
+                                value={isEditPage ? bookingEdit.checkIn : ""}
+                                onChange={handleChange}
+                                placeholder="Check In"
+                            />
                             <LabelStyled>Check Out</LabelStyled>
-                            <InputStyled type="date" name="checkOut" value={bookingEdit.checkOut} onChange={handleChange} placeholder="Check Out" />
+                            <InputStyled
+                                type="date"
+                                name="checkOut"
+                                value={isEditPage ? bookingEdit.checkOut : ""}
+                                onChange={handleChange}
+                                placeholder="Check Out"
+                            />
                             <LabelStyled>Room ID</LabelStyled>
-                            <InputStyled type="number" name="roomId" value={bookingEdit.roomId} onChange={handleChange} readOnly={isEditPage} placeholder="Room Id" />
+                            <InputStyled
+                                type="number"
+                                name="roomId"
+                                value={isEditPage ? bookingEdit.roomId : 0}
+                                onChange={handleChange}
+                                readOnly={isEditPage}
+                                placeholder="Room Id"
+                            />
                             <LabelStyled>Status</LabelStyled>
                             <SelectForm 
                                 name="status"
@@ -155,7 +165,12 @@ export const BookingEditPage = () => {
                                 onChange={(option) => handleSelectChange(option as SingleValue<{ value: "In progress" | "Check In" | "Check Out"; label: string }>)}
                             />
                             <LabelStyled>Special Request</LabelStyled>
-                            <TextareaStyled name="specialRequest" value={bookingEdit.specialRequest} onChange={handleChange} placeholder="Description" />
+                            <TextareaStyled
+                                name="specialRequest"
+                                value={isEditPage ? bookingEdit.specialRequest : ""}
+                                onChange={handleChange}
+                                placeholder="Description"
+                            />
                             <ButtonStyled styled='send' type="submit">{isEditPage ? 'Save Changes' : 'Add Booking'}</ButtonStyled>
                         </FormStyled>
                     </SectionFormStyled>
