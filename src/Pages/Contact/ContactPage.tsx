@@ -157,8 +157,8 @@ export const ContactPage = () => {
                     <SectionOrder>
                         <List>
                             <ItemList onClick={handleClickAll}>All Contacts</ItemList>
-                            <ItemList onClick={handleClickPublished}>Published</ItemList>
-                            <ItemList onClick={handleClickArchived}>Archived</ItemList>
+                            <ItemList onClick={handleClickPublished}>Archived</ItemList>
+                            <ItemList onClick={handleClickArchived}>Published</ItemList>
                         </List>
                         <ButtonStyled styled='send' onClick={() => navigate('/contact/newcontact')}>+ New Contact</ButtonStyled>
                         <SelectStyled onChange={handleSelectChange}>

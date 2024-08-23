@@ -18,9 +18,7 @@ export const addBookingThunk = createAsyncThunk('booking/postBooking', async (bo
 });
 
 export const updateBookingThunk = createAsyncThunk('booking/putBooking', async (bookingData: Booking) => {
-    console.log(bookingData);
     const updateBooking = await (backendAPI(`/bookings/${bookingData._id}`, 'PUT', bookingData)) as Booking;
-    console.log(updateBooking);
     return updateBooking;
 });
 

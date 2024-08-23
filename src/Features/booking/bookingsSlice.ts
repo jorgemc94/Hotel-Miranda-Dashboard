@@ -67,11 +67,9 @@ export const BookingsSlice = createSlice({
                 state.error = action.error.message || null;
             })
             .addCase(updateBookingThunk.fulfilled, (state, action: PayloadAction<Booking> ) => {
-                const index = state.bookings.findIndex(booking => booking._id === action.payload._id);
-                if (index !== -1) {
-                    state.bookings[index] = action.payload;
-                    state.booking = action.payload;
-                }
+                state.bookings = state.bookings.map(booking =>
+                    booking._id === action.payload._id ? action.payload : booking
+                );
             })
             .addCase(deleteBookingThunk.pending, (state) => {
                 state.status = 'pending';
@@ -81,7 +79,6 @@ export const BookingsSlice = createSlice({
                 state.error = action.error.message || null;
             })
             .addCase(deleteBookingThunk.fulfilled, (state, action: PayloadAction<Booking>) => {
-                console.log(action.payload)
                 state.bookings = state.bookings.filter(booking => booking._id !== action.payload._id);
             })
             

@@ -67,11 +67,9 @@ export const ContactsSlice = createSlice({
             state.error = action.error.message || null;
         })
         .addCase(updateContactThunk.fulfilled, (state, action: PayloadAction<Contact> ) => {
-            const index = state.contacts.findIndex(contact => contact._id === action.payload._id);
-            if (index !== -1) {
-                state.contacts[index] = action.payload;
-                state.contact = action.payload;
-            }
+            state.contacts = state.contacts.map(contact =>
+                contact._id === action.payload._id ? action.payload : contact
+            );
         })
         .addCase(deleteContactThunk.pending, (state) => {
             state.status = 'pending';
