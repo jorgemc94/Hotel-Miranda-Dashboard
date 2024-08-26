@@ -60,17 +60,32 @@ export const UsersPage = () => {
             )
         )},
         { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row: User) => {
+            
+            if (!row?.id) {
+                return <> null </>;
+            }
+
             return (
                 <>
-                    <RiDeleteBin6Line onClick={(event: MouseEvent) => deleteHandle(event, row.id)} /> 
-                    <CiEdit onClick={() => navigateEditHandle(row.id)} />
+                    <RiDeleteBin6Line onClick={(event: MouseEvent) => deleteHandle(event, row.id!)} /> 
+                    <CiEdit onClick={() => navigateEditHandle(row.id!)} />
                 </>
             )
         }}
     ];
 
-    const deleteHandle = (event: MouseEvent, userID: number) => {
+    const deleteHandle = (event: MouseEvent, userID?: number) => {
         event.stopPropagation();
+
+        if (userID === undefined) {
+            
+            Swal.fire({
+                title: "Error",
+                text: "User ID is undefined.",
+                icon: "error"
+            });
+            return;
+        }
         
         Swal.fire({
             title: "Are you sure?",
@@ -93,7 +108,17 @@ export const UsersPage = () => {
         });
     }
 
-    const navigateEditHandle = (userId: number) => {
+    const navigateEditHandle = (userId?: number) => {
+        if (userId === undefined) {
+            
+            Swal.fire({
+                title: "Error",
+                text: "User ID is undefined.",
+                icon: "error"
+            });
+            return;
+        }
+
         navigate(`/user/edit/${userId}`);
     };
 
@@ -136,7 +161,7 @@ export const UsersPage = () => {
 
     return (
         <>
-            {isLoading ?<FourSquare color="#32cd32" size="medium" text="" textColor="" />: 
+            {isLoading ? <FourSquare color="#32cd32" size="medium" text="" textColor="" /> : 
                 <>
                     <SectionOrder>
                         <List>

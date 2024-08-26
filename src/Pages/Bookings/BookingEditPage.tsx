@@ -22,7 +22,6 @@ export const BookingEditPage = () => {
     const bookingsError = useSelector((state: RootState) => state.bookings.error);
     const [bookingEdit, setBookingEdit] = useState<Booking>({
         fullName: "",
-        _id: 0,
         bookDate: "",
         checkIn: "",
         checkOut: "",

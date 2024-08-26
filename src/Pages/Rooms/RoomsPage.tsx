@@ -103,8 +103,8 @@ export const RoomsListPage = () => {
             columnsData: 'actions',
             columnRenderer: (row: Room) => (
                 <>
-                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row.id)} />
-                    <CiEdit onClick={() => navigateEditHandle(row.id)} />
+                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row.id!)} />
+                    <CiEdit onClick={() => navigateEditHandle(row.id!)} />
                 </>
             ),
         },

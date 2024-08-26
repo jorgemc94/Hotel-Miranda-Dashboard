@@ -30,7 +30,7 @@ export const LoginPage: React.FC = () => {
 
     return (
         <LoginForm>
-            <LogoForm src="src/assets/icon.png" alt="logo" />
+            <LogoForm src="../icon.png" alt="logo" />
             <TitleForm>Login</TitleForm>
             <AccessForm>Email:jorgemc1294@gmail.com Password:12345</AccessForm>
             {error && <TextError>{error}</TextError>}

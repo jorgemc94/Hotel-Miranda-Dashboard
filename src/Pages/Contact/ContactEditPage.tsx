@@ -22,7 +22,6 @@ export const ContactEditPage = () => {
     const contactsError = useSelector((state: RootState) => state.contacts.error);
 
     const [contactEdit, setContactEdit] = useState<Contact>({
-        _id: 0,
         subject: "",
         comment: "",
         archived: "false",
@@ -63,7 +62,6 @@ export const ContactEditPage = () => {
                 });
             } else if (!isEditPage) {
                 setContactEdit({
-                    _id: 0,
                     subject: "",
                     comment: "",
                     archived: "false",

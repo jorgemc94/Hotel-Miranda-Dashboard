@@ -25,9 +25,9 @@ interface Logout {
 interface EditUser {
     type: 'EDITUSER';
     payload: {
-        name?: string;
+        name: string;
         email: string;
-        password: string;
+        password?: string;
         photo?: string;
     };
 }

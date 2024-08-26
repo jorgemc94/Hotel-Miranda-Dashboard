@@ -75,12 +75,15 @@ export const ContactPage = () => {
             )
         )},
         { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row: Contact) => {
+            if (!row._id) {
+                return <span>No Actions Available</span>;
+            }
             return (
                 <>
-                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row._id.toString())} /> 
-                    <CiEdit onClick={() => navigateEditHandle(row._id.toString())} />
+                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row._id!.toString())} /> 
+                    <CiEdit onClick={() => navigateEditHandle(row._id!.toString())} />
                 </>
-            )
+            );
         }}
     ];
 
@@ -103,8 +106,8 @@ export const ContactPage = () => {
                     text: "Your file has been deleted.",
                     icon: "success"
                 });
-                setAllContacts((prevContacts) => prevContacts.filter(contact => contact._id.toString() !== contactId));
-                setFilteredContacts((prevContacts) => prevContacts.filter(contact => contact._id.toString() !== contactId));
+                setAllContacts((prevContacts) => prevContacts.filter(contact => contact._id !== contactId));
+                setFilteredContacts((prevContacts) => prevContacts.filter(contact => contact._id !== contactId));
             }
         });
     }
@@ -125,7 +128,7 @@ export const ContactPage = () => {
         } else if (value === 'phone') {
             sortedContacts = sortedContacts.sort((a, b) => a.client.phone.localeCompare(b.client.phone));
         } else {
-            sortedContacts = sortedContacts.sort((a, b) => a._id.toString().localeCompare(b._id.toString()));
+            sortedContacts = sortedContacts.sort((a, b) => a._id!.toString().localeCompare(b._id!.toString()));
         }
 
         setFilteredContacts(sortedContacts);
