@@ -6,6 +6,7 @@ export const TableStyled = styled.table `
     color: #393939;
     margin-top: 3em;
     padding: 1em;
+    cursor: pointer;
 `
 
 interface SubtitleTableProps {

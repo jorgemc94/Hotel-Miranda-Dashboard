@@ -1,20 +1,22 @@
+
+import React, { useState, useEffect, ChangeEvent } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
+import { FourSquare } from "react-loading-indicators";
 import { SectionOrder } from "../../Components/styled/OrderStyled";
 import { ItemList, List } from "../../Components/styled/LinkStyled";
 import { SelectStyled } from "../../Components/styled/SelectStyled";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { TableComponent } from "../../Components/Table/TableComponent";
-import { ImageTable, NameTable, SubtitleTable } from "../../Components/Table/TableStyled";
+import { ImageTable, SubtitleTable } from "../../Components/Table/TableStyled";
 import { Contact } from "../../types";
 import { getContactList, getContactsError, getContactsStatus } from "../../Features/contact/contactsSlice";
-import { useState, useEffect, ChangeEvent } from "react";
 import { AppDispatch, RootState } from "../../App/store";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { ContactsListThunk, deleteContactThunk } from "../../Features/contact/contactsThunk";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
-import Swal from 'sweetalert2';
-import { FourSquare } from "react-loading-indicators";
+import { CommentComponent } from "./ModalContact/CommentComponent";
 
 export const ContactPage = () => {
     const dispatchRedux: AppDispatch = useDispatch();
@@ -28,6 +30,8 @@ export const ContactPage = () => {
     const [filteredContacts, setFilteredContacts] = useState<Contact[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
     useEffect(() => {
         dispatchRedux(ContactsListThunk());
@@ -59,14 +63,11 @@ export const ContactPage = () => {
             )
         },
         { headerColumn: 'Comment', columnsData: 'comment', columnRenderer: (row: Contact) =>
-        (
-            <NameTable>
-                <SubtitleTable>Subject</SubtitleTable>
-                <SubtitleTable $subtitle>{row.subject}</SubtitleTable>
-                <SubtitleTable>Message</SubtitleTable>
-                <SubtitleTable $subtitle>{row.comment}</SubtitleTable>
-            </NameTable> 
-        )},
+            (
+                <ButtonStyled styled='view' onClick={(event) => handleShowModal(event, row)}>
+                    View Comment
+                </ButtonStyled>
+            )},
         { headerColumn: 'Archived', columnsData: 'archived', columnRenderer: (row: Contact) => (
             row.archived === 'true' ? (
                 <ButtonStyled styled='available'>Publish</ButtonStyled>
@@ -114,6 +115,17 @@ export const ContactPage = () => {
 
     const navigateEditHandle = (contactId: string) => {
         navigate(`/contact/edit/${contactId}`);
+    };
+
+    const handleShowModal = (event: React.MouseEvent<HTMLButtonElement>, contact: Contact) => {
+        event.stopPropagation();
+        setSelectedContact(contact);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedContact(null);
     };
 
     const sortContactsHandler = (value: string) => {
@@ -172,6 +184,11 @@ export const ContactPage = () => {
                         </SelectStyled>
                     </SectionOrder>
                     <TableComponent columns={columns} data={filteredContacts} detailPage='/contact' />
+                    <CommentComponent 
+                        isActive={showModal} 
+                        onClose={handleCloseModal} 
+                        contact={selectedContact} 
+                    />
                 </>
             }
         </>
