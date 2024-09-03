@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FiArrowLeft } from "react-icons/fi";
-import { getRoom, getRoomsError, getRoomsList, getRoomsStatus } from "../../Features/rooms/roomsSlice";
-import { RoomDetailsThunk } from "../../Features/rooms/roomsDetailsThunk";
+import { getRoom, getRoomsError, getRoomsStatus } from "../../Features/rooms/roomsSlice";
+import { RoomThunk } from "../../Features/rooms/roomsThunk";
 import { ContentDetails, ContentText, ImageDetails, SectionDetails, ContentTextDetails, TextDetails, ContentBottom } from "../../Components/styled/DetailsStyled";
 import { AppDispatch, RootState } from "../../App/store";
 import { Room } from "../../types";
@@ -18,25 +18,25 @@ export const RoomDetailsPage = () => {
     const room = useSelector((state: RootState) => getRoom(state));
     const roomStatus = useSelector((state: RootState) => getRoomsStatus(state));
     const roomError = useSelector((state: RootState) => getRoomsError(state));
-    const roomsList = useSelector((state: RootState) => getRoomsList(state));
     const [roomRender, setRoomRender] = useState<Room | null>(null)
 
     useEffect(() => {
-        if (roomStatus === 'idle' || roomStatus === 'fulfilled') {
-            const numberId = Number(id);
-            dispatchRedux(RoomDetailsThunk({id: numberId, roomList : roomsList}))
+        if (id) {
+            dispatchRedux(RoomThunk(id));
         }
-    }, [id, dispatchRedux, roomsList])
+    }, [id, dispatchRedux]);
 
     useEffect(() => {
-        if (roomStatus === 'fulfilled') {
+        if (roomStatus === 'pending') {
+            setIsLoading(true);
+        } else if (roomStatus === 'fulfilled' && room) {
+            setRoomRender(room);
             setIsLoading(false);
-            setRoomRender(room as Room);
         } else if (roomStatus === 'rejected') {
             setIsLoading(false);
-            console.log(roomError);
+            console.error(roomError);
         }
-    }, [roomStatus, roomError, room]);
+    }, [roomStatus, room, roomError]);
 
     const navigateHandle = () => {
         navigate('/rooms');

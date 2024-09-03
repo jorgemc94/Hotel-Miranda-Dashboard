@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { FiArrowLeft } from "react-icons/fi";
-import { addRoom, editRoom, getRoom, getRoomsList } from "../../Features/rooms/roomsSlice";
-import { RoomDetailsThunk } from "../../Features/rooms/roomsDetailsThunk";
+import { getRoom, getRoomList, getRoomsStatus } from "../../Features/rooms/roomsSlice";
+import { addRoomThunk, RoomThunk, updateRoomThunk } from "../../Features/rooms/roomsThunk";
 import { FormStyled, InputStyled, LabelStyled, SectionFormStyled, TextareaStyled } from "../../Components/styled/FormStyled";
 import { AppDispatch, RootState } from "../../App/store";
 import { Room } from "../../types";
@@ -14,13 +14,13 @@ import Swal from 'sweetalert2';
 import { FourSquare } from "react-loading-indicators";
 
 export const RoomEditPage = () => {
+    const roomStatus = useSelector((state: RootState) => getRoomsStatus(state));
     const { id } = useParams<string>();
     const navigate = useNavigate();
     const dispatchRedux: AppDispatch = useDispatch();
-    const room = useSelector((state: RootState) => getRoom(state));
-    const roomsList = useSelector(getRoomsList);
+    const room: Room = useSelector((state: RootState) => getRoom(state));
+    const roomsError = useSelector((state: RootState) => state.rooms.error);
     const [roomEdit, setRoomEdit] = useState<Room>({
-        id: 0,
         roomNumber: 0,
         availability: "available",
         roomType: "Double Superior",
@@ -33,43 +33,27 @@ export const RoomEditPage = () => {
         offer: false,
     });
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<any>(null);
-
     const isEditPage = Boolean(id);
 
     useEffect(() => {
-        const fetchRoomDetails = async () => {
-            const numberId = Number(id);
-            if (isEditPage) {
-                try {
-                    await dispatchRedux(RoomDetailsThunk({ id: numberId, roomList: roomsList }));
-                } catch (err) {
-                    setError(err);
-                }
-            }
+        if (isEditPage) {
+            dispatchRedux(RoomThunk(id as string));
+        } else {
             setIsLoading(false);
-        };
-
-        fetchRoomDetails();
-    }, [id, dispatchRedux, isEditPage, roomsList]);
+        }
+    }, [id, dispatchRedux, isEditPage]);
 
     useEffect(() => {
-        if (room && isEditPage) {
-            setRoomEdit({
-                id: room.id,
-                roomNumber: room.roomNumber,
-                availability: room.availability,
-                roomType: room.roomType,
-                description: room.description,
-                price: room.price,
-                discount: room.discount,
-                cancellation: room.cancellation,
-                amenities: room.amenities,
-                photosArray: room.photosArray,
-                offer: room.offer
-            });
+        if (roomStatus === 'pending') {
+            setIsLoading(true);
+        } else if (roomStatus === 'fulfilled' && isEditPage) {
+            setRoomEdit(room);
+            setIsLoading(false);
+        } else if (roomStatus === 'rejected') {
+            setIsLoading(false);
+            console.error(roomsError);
         }
-    }, [room, isEditPage]);
+    }, [roomStatus, isEditPage, room, roomsError]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = event.target;
@@ -88,26 +72,37 @@ export const RoomEditPage = () => {
         setRoomEdit({ ...roomEdit, [name]: values });
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        if (isEditPage) {
-            dispatchRedux(editRoom(roomEdit));
+        try {
+            if (isEditPage) {
+                await dispatchRedux(updateRoomThunk(roomEdit));
+                Swal.fire({
+                    title: "Edit Room!",
+                    text: "Your file has been edited.",
+                    icon: "success"
+                });
+            } else {
+                await dispatchRedux(addRoomThunk(roomEdit));
+                Swal.fire({
+                    title: "New Room!",
+                    text: "Your file has been added.",
+                    icon: "success"
+                });
+            }
+    
+            navigate('/rooms');
+            
+        } catch (err) {
+            console.error(err);
             Swal.fire({
-                title: "Edit Room!",
-                text: "Your file has been edited.",
-                icon: "success"
-            });
-        } else {
-            dispatchRedux(addRoom(roomEdit));
-            Swal.fire({
-                title: "New Room!",
-                text: "Your file has been added.",
-                icon: "success"
+                title: "Error!",
+                text: "An error occurred while saving the booking.",
+                icon: "error"
             });
         }
 
-        navigate('/rooms');
+       
     };
 
     const optionsAmenities = [
@@ -149,8 +144,6 @@ export const RoomEditPage = () => {
                     <ButtonStyled styled='pending' onClick={navigateHandle}><FiArrowLeft /></ButtonStyled>
                     <SectionFormStyled>
                         <FormStyled onSubmit={handleSubmit}>
-                            <LabelStyled>ID</LabelStyled>
-                            <InputStyled type="number" name="id" value={roomEdit.id} onChange={handleChange} readOnly={isEditPage} placeholder="Id" />
                             <LabelStyled>Number</LabelStyled>
                             <InputStyled type="number" name="roomNumber" value={roomEdit.roomNumber} onChange={handleChange} placeholder="Room Number" />
                             <LabelStyled>Bed Type</LabelStyled>

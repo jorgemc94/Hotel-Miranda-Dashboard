@@ -16,7 +16,7 @@ export interface User {
 
 
 export interface Room {
-    id: number;
+    _id?: string;
     roomNumber: number;
     availability: "available" | "booked";
     roomType: "Double Superior";
