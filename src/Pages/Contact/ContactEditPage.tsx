@@ -171,6 +171,14 @@ export const ContactEditPage = () => {
                                 onChange={handleChange}
                                 placeholder="Phone"
                             />
+                            <LabelStyled>Photo</LabelStyled>
+                            <InputStyled
+                                type="text"
+                                name="image"
+                                value={contactEdit.client.image}
+                                onChange={handleChange}
+                                placeholder="Image"
+                            />
                             <LabelStyled>Date</LabelStyled>
                             <InputStyled
                                 type="date"

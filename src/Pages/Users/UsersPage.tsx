@@ -6,8 +6,8 @@ import { ButtonStyled } from "../../Components/styled/ButtonStyled";
 import { TableComponent } from "../../Components/Table/TableComponent";
 import { ImageTable, SubtitleTable } from "../../Components/Table/TableStyled";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersStatus, getUsersError, getUsersList, deleteUser } from "../../Features/users/usersSlice";
-import { UsersThunk } from "../../Features/users/usersThunk";
+import { getUsersStatus, getUsersError, getUserList } from "../../Features/users/usersSlice";
+import { UsersListThunk, deleteUserThunk } from "../../Features/users/usersThunk";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import Swal from 'sweetalert2'; 
@@ -19,7 +19,7 @@ import { FourSquare } from "react-loading-indicators";
 export const UsersPage = () => {
     const [users, setUsers] = useState<User[]>([]);
     const usersStatus = useSelector((state: RootState) => getUsersStatus(state));
-    const usersList = useSelector((state: RootState) => getUsersList(state));
+    const usersList = useSelector((state: RootState) => getUserList(state));
     const userListError = useSelector((state: RootState) => getUsersError(state));
     const dispatchRedux: AppDispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(true);
@@ -27,8 +27,12 @@ export const UsersPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        dispatchRedux(UsersListThunk());
+    }, [dispatchRedux]);
+
+    useEffect(() => {
         if (usersStatus === 'idle') {
-            dispatchRedux(UsersThunk());
+            setIsLoading(false);
         } else if (usersStatus === 'fulfilled') {
             setIsLoading(false);
             setUsers(usersList);
@@ -36,7 +40,7 @@ export const UsersPage = () => {
             setIsLoading(false);
             setError(userListError);
         }
-    }, [usersStatus, usersList, userListError, dispatchRedux]);
+    }, [usersStatus, userListError, usersList]);
 
     const columns = [
         { headerColumn: 'Photos', columnsData: 'photo', columnRenderer: (row: User) => <ImageTable styled='users' src={row.photo} alt="User Photo" /> },
@@ -45,7 +49,7 @@ export const UsersPage = () => {
                 <>
                     <SubtitleTable>{row.name}</SubtitleTable>
                     <SubtitleTable>{row.email}</SubtitleTable>
-                    <SubtitleTable>{row.id}</SubtitleTable>
+                    <SubtitleTable>{row._id}</SubtitleTable>
                 </>
             )
         },
@@ -61,20 +65,20 @@ export const UsersPage = () => {
         )},
         { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row: User) => {
             
-            if (!row?.id) {
+            if (!row?._id) {
                 return <> null </>;
             }
 
             return (
                 <>
-                    <RiDeleteBin6Line onClick={(event: MouseEvent) => deleteHandle(event, row.id!)} /> 
-                    <CiEdit onClick={() => navigateEditHandle(row.id!)} />
+                    <RiDeleteBin6Line onClick={(event: MouseEvent) => deleteHandle(event, row._id!)} /> 
+                    <CiEdit onClick={() => navigateEditHandle(row._id!)} />
                 </>
             )
         }}
     ];
 
-    const deleteHandle = (event: MouseEvent, userID?: number) => {
+    const deleteHandle = (event: MouseEvent, userID?: string) => {
         event.stopPropagation();
 
         if (userID === undefined) {
@@ -97,18 +101,18 @@ export const UsersPage = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                dispatchRedux(deleteUser(userID));
+                dispatchRedux(deleteUserThunk(userID));
                 Swal.fire({
                     title: "Deleted!",
                     text: "Your file has been deleted.",
                     icon: "success"
                 });
-                setUsers((prevUsers) => prevUsers.filter(user => user.id !== userID));
+                setUsers((prevUsers) => prevUsers.filter(user => user._id !== userID));
             }
         });
     }
 
-    const navigateEditHandle = (userId?: number) => {
+    const navigateEditHandle = (userId?: string) => {
         if (userId === undefined) {
             
             Swal.fire({
@@ -129,8 +133,6 @@ export const UsersPage = () => {
             sortedUsers = sortedUsers.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         } else if (value === 'name') {
             sortedUsers = sortedUsers.sort((a, b) => a.name.localeCompare(b.name));
-        } else {
-            sortedUsers = sortedUsers.sort((a, b) => a.id - b.id);
         }
 
         setUsers(sortedUsers);
