@@ -1,4 +1,4 @@
-name: Deploy React App to S3
+name: Deploy Vite App to S3
 
 on:
   push:
@@ -12,20 +12,20 @@ jobs:
     steps:
     # Checkout the code
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     # Setup Node.js
     - name: Setup Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '16' 
 
     # Install dependencies
     - name: Install dependencies
       run: npm install
 
-    # Build the React project
-    - name: Build React App
+    # Build the Vite project
+    - name: Build Vite App
       run: npm run build
 
     # Sync files to S3 using jakejarvis/s3-sync-action
@@ -38,13 +38,17 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
-        SOURCE_DIR: 'build'
+        SOURCE_DIR: 'dist'
+
+    # Run Jest tests
+    - name: Run Jest tests
+      run: npm run test
 
     # Run Cypress tests
     - name: Run Cypress tests
       uses: cypress-io/github-action@v4
       with:
-        start: npm start
+        start: npm run dev
         wait-on: 'http://localhost:3000'
         browser: chrome
       env:
