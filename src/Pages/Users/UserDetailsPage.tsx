@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, getUsersError, getUsersList, getUsersStatus } from "../../Features/users/usersSlice";
-import { UserDetailsThunk } from "../../Features/users/userDetailsThunk";
+import { getUser, getUsersError, getUsersStatus } from "../../Features/users/usersSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { ContentDetails, ContentText, ImageDetails, SectionDetails, TextDetails, ContentTextDetails } from "../../Components/styled/DetailsStyled";
 import { ButtonStyled } from "../../Components/styled/ButtonStyled";
@@ -9,6 +8,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { AppDispatch, RootState } from "../../App/store";
 import { User } from "../../types";
 import { FourSquare } from "react-loading-indicators";
+import { UserThunk } from "../../Features/users/usersThunk";
 
 export const UserDetailsPage = () => {
     const { id } = useParams<string>();
@@ -18,25 +18,25 @@ export const UserDetailsPage = () => {
     const user = useSelector((state: RootState) => getUser(state));
     const userStatus = useSelector((state: RootState) => getUsersStatus(state));
     const usersError = useSelector((state: RootState) => getUsersError(state));
-    const usersList = useSelector((state: RootState) => getUsersList(state));
+    const usersList = useSelector((state: RootState) => getUser(state));
     const [employee, setEmployee] = useState<User | null>(null);
 
     useEffect(() => {
-        if (userStatus === 'idle' || userStatus === 'fulfilled') {
-            const numberId = Number(id);
-            dispatchRedux(UserDetailsThunk({ id: numberId, usersList: usersList }));
-        }
-    }, [id, dispatchRedux, usersList]);
+        dispatchRedux(UserThunk(id as string));
+    },[])
 
     useEffect(() => {
-        if (userStatus === 'fulfilled') {
-            setIsLoading(false);
-            setEmployee(user as User);
+        if (userStatus === 'pending') {
+            setIsLoading(true)
+        } else if (userStatus === 'fulfilled') {
+            setEmployee(user)
+            setIsLoading(false)
+            console.log(user)
         } else if (userStatus === 'rejected') {
             setIsLoading(false);
             console.error(usersError);
         }
-    }, [userStatus, user, usersError]);
+    }, [userStatus]);;
 
     const navigateHandle = () => {
         navigate('/users');
@@ -52,7 +52,7 @@ export const UserDetailsPage = () => {
                     <SectionDetails>
                         <ContentDetails>
                             <TextDetails $title>{employee.name}</TextDetails>
-                            <TextDetails>{employee.id}</TextDetails>
+                            <TextDetails>{employee._id}</TextDetails>
                             <ContentText>
                                 <ContentTextDetails>
                                     <TextDetails $title>Email</TextDetails>

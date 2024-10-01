@@ -2,7 +2,7 @@ import React from 'react';
 import { CardComment, DateComment, DetailsComment, IconsComment, ImagenComment, NameComment } from "./CommentStyled";
 import { FiXCircle } from "react-icons/fi";
 import { FaRegCheckCircle } from "react-icons/fa";
-import commentsData from '../../data/comments.json';  
+import commentsData from '../../Components/data/contact.json'  
 
 export const CommentComponent = () => {
     const data = commentsData;  
@@ -13,7 +13,7 @@ export const CommentComponent = () => {
                 <CardComment key={comment.id}>
                     <p>{comment.client.name}</p>
                     <DetailsComment>
-                        <ImagenComment src={comment.img}/>  
+                        <ImagenComment src={comment.client.image}/>  
                         <DateComment>
                             <NameComment $name='true'>{comment.client.name}</NameComment>
                             <NameComment>{comment.date}</NameComment>

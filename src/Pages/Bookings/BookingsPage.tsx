@@ -6,11 +6,11 @@ import { TableComponent } from "../../Components/Table/TableComponent";
 import { SubtitleTable } from "../../Components/Table/TableStyled";
 import { useState, useEffect, ChangeEvent } from "react";
 import { Booking } from "../../types";
-import { deleteBooking, getBookingList, getBookingsError, getBookingsStatus } from "../../Features/booking/bookingsSlice";
+import { getBookingList, getBookingsError, getBookingsStatus } from "../../Features/booking/bookingsSlice";
 import { AppDispatch, RootState } from "../../App/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { BookingsThunk } from "../../Features/booking/bookingsThunk";
+import { BookingsListThunk, deleteBookingThunk } from "../../Features/booking/bookingsThunk";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import Swal from 'sweetalert2';
@@ -28,8 +28,12 @@ export const BookingsPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        dispatchRedux(BookingsListThunk());
+    }, [dispatchRedux]);
+
+    useEffect(() => {
         if (bookingsStatus === 'idle') {
-            dispatchRedux(BookingsThunk());
+            setIsLoading(false);
         } else if (bookingsStatus === 'fulfilled') {
             setIsLoading(false);
             setBookings(bookingsList);
@@ -37,7 +41,7 @@ export const BookingsPage = () => {
             setIsLoading(false);
             setError(bookingListError);
         }
-    }, [bookingsStatus, bookingsList, bookingListError, dispatchRedux]);
+    }, [bookingsStatus, bookingsList, bookingListError]);
 
     const columns = [
         { headerColumn: 'Guest', columnsData: 'fullName', columnRenderer: (row: Booking) => <SubtitleTable>{row.fullName}</SubtitleTable> },
@@ -48,27 +52,28 @@ export const BookingsPage = () => {
         { headerColumn: 'Status', columnsData: 'status', columnRenderer: (row: Booking) => (
             row.status === 'In progress' ? (
                 <ButtonStyled styled='progress'>{row.status}</ButtonStyled>
+            ) : row.status === 'Check In' ? (
+                <ButtonStyled styled='available'>{row.status}</ButtonStyled>
             ) : (
-                row.status === 'Check In' ? (
-                    <ButtonStyled styled='available'>{row.status}</ButtonStyled>
-                ) : (
-                    <ButtonStyled styled='bookedRed'>{row.status}</ButtonStyled>
-                )
+                <ButtonStyled styled='bookedRed'>{row.status}</ButtonStyled>
             )
         ) },
         { headerColumn: 'Actions', columnsData: 'actions', columnRenderer: (row: Booking) => {
+            if (!row._id) {
+                return <></>;
+            }
             return (
                 <>
-                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row.id)} /> 
-                    <CiEdit onClick={() => navigateEditHandle(row.id)} />
+                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row._id!)} />
+                    <CiEdit onClick={() => navigateEditHandle(row._id!)} />
                 </>
             )
         }}
     ];
 
-    const deleteHandle = (event: React.MouseEvent<SVGElement>, bookingID: number) => {
+    const deleteHandle = (event: React.MouseEvent<SVGElement>, bookingID: string) => {
         event.stopPropagation();
-        
+
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -79,18 +84,25 @@ export const BookingsPage = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                dispatchRedux(deleteBooking(bookingID));
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your file has been deleted.",
-                    icon: "success"
+                dispatchRedux(deleteBookingThunk(bookingID)).then(() => {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                    setBookings((prevBookings) => prevBookings.filter(booking => booking._id !== bookingID));
+                }).catch(error => {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "There was a problem deleting the booking.",
+                        icon: "error"
+                    });
                 });
-                setBookings((prevBookings) => prevBookings.filter(booking => booking.id !== bookingID));
             }
         });
     }
 
-    const navigateEditHandle = (bookingID: number) => {
+    const navigateEditHandle = (bookingID: string) => {
         navigate(`/booking/edit/${bookingID}`);
     };
 
@@ -105,8 +117,6 @@ export const BookingsPage = () => {
             sortedBookings = sortedBookings.sort((a, b) => new Date(a.checkIn).getTime() - new Date(b.checkIn).getTime());
         } else if (value === 'checkOut') {
             sortedBookings = sortedBookings.sort((a, b) => new Date(a.checkOut).getTime() - new Date(b.checkOut).getTime());
-        } else {
-            sortedBookings = sortedBookings.sort((a, b) => a.id - b.id);
         }
 
         setBookings(sortedBookings);

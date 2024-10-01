@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteRoom, getRoomsStatus, getRoomsError, getRoomsList } from "../../Features/rooms/roomsSlice";
+import { getRoomsStatus, getRoomsError, getRoomList } from "../../Features/rooms/roomsSlice";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import Swal from 'sweetalert2'; 
-import { RoomsThunk } from "../../Features/rooms/roomsThunk";
+import { deleteRoomThunk, RoomsListThunk } from "../../Features/rooms/roomsThunk";
 import { Room } from "../../types";
 import { AppDispatch, RootState } from "../../App/store";
 import { FourSquare } from "react-loading-indicators";
@@ -23,12 +23,12 @@ export const RoomsListPage = () => {
     const [sortCriteria, setSortCriteria] = useState('id');
     const roomStatus = useSelector((state: RootState) => getRoomsStatus(state));
     const roomsError = useSelector((state: RootState) => getRoomsError(state));
-    const roomsList = useSelector((state: RootState) => getRoomsList(state));
+    const roomsList = useSelector((state: RootState) => getRoomList(state));
     const dispatchRedux: AppDispatch = useDispatch();
 
     useEffect(() => {
         if (roomStatus === 'idle') {
-            dispatchRedux(RoomsThunk());
+            dispatchRedux(RoomsListThunk());
         } else if (roomStatus === 'fulfilled') {
             setIsLoading(false);
             setRooms(roomsList);
@@ -54,7 +54,7 @@ export const RoomsListPage = () => {
             ),
         },
         { headerColumn: 'Number', columnsData: 'roomNumber', columnRenderer: (row: Room) => <SubtitleTable>{row.roomNumber}</SubtitleTable> },
-        { headerColumn: 'ID', columnsData: 'id', columnRenderer: (row: Room) => <SubtitleTable>{row.id}</SubtitleTable> },
+        { headerColumn: 'ID', columnsData: 'id', columnRenderer: (row: Room) => <SubtitleTable>{row._id}</SubtitleTable> },
         { headerColumn: 'Bed Type', columnsData: 'roomType', columnRenderer: (row: Room) => <SubtitleTable>{row.roomType}</SubtitleTable> },
         {
             headerColumn: 'Amenities',
@@ -103,14 +103,14 @@ export const RoomsListPage = () => {
             columnsData: 'actions',
             columnRenderer: (row: Room) => (
                 <>
-                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row.id)} />
-                    <CiEdit onClick={() => navigateEditHandle(row.id)} />
+                    <RiDeleteBin6Line onClick={(event: React.MouseEvent<SVGElement>) => deleteHandle(event, row._id!)} />
+                    <CiEdit onClick={() => navigateEditHandle(row._id!)} />
                 </>
             ),
         },
     ];
 
-    const deleteHandle = (event: React.MouseEvent<SVGElement>, roomId: number) => {
+    const deleteHandle = (event: React.MouseEvent<SVGElement>, roomId: string) => {
         event.stopPropagation();
 
         Swal.fire({
@@ -123,7 +123,7 @@ export const RoomsListPage = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                dispatchRedux(deleteRoom(roomId));
+                dispatchRedux(deleteRoomThunk(roomId));
                 Swal.fire({
                     title: "Room Deleted!",
                     text: "Your file has been deleted.",
@@ -133,7 +133,7 @@ export const RoomsListPage = () => {
         });
     };
 
-    const navigateEditHandle = (roomId: number) => {
+    const navigateEditHandle = (roomId: string) => {
         navigate(`/room/edit/${roomId}`);
     };
 
@@ -151,7 +151,7 @@ export const RoomsListPage = () => {
         } else if (value === 'highestPrice') {
             sortedRooms = sortedRooms.sort((a, b) => a.price - b.price);
         } else if (value === 'id') {
-            sortedRooms = sortedRooms.sort((a, b) => a.id - b.id);
+            sortedRooms = sortedRooms.sort((a, b) =>a._id!.toString().localeCompare(b._id!.toString()));
         }
 
         setRooms(sortedRooms);

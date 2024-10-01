@@ -21,7 +21,7 @@ export const MenuComponent = () => {
     return (
         <>
             <MenuLogo>
-                <ImageMenu src="/src/assets/icon.png" alt="logo" />
+                <ImageMenu src="icon.png" alt="logo" />
                 <TextMenu>
                     <TextLogo $title>travl</TextLogo>
                     <TextLogo>Hotel Admin Dashboard</TextLogo>
@@ -60,7 +60,7 @@ export const MenuComponent = () => {
                 </NavLinkStyle>
             </NavigationList>
             <User>
-                <UserImg src="/src/assets/jorge.png" alt="User" />
+                <UserImg src="jorge.png" alt="User" />
                 <UserName $title={true}>{state.name}</UserName>
                 <UserName>{state.email}</UserName>
                 <UserButton onClick={openModal}>Contact Us</UserButton>

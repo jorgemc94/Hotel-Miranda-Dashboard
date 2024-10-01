@@ -1,6 +1,6 @@
 
 export interface User {
-    id: number,
+    _id?: string,
     name: string,
     email: string,
     phone: string,
@@ -16,7 +16,7 @@ export interface User {
 
 
 export interface Room {
-    id: number;
+    _id?: string;
     roomNumber: number;
     availability: "available" | "booked";
     roomType: "Double Superior";
@@ -32,7 +32,7 @@ export interface Room {
 
 export interface Booking {
     fullName: string,
-    id: number,
+    _id?: string,
     bookDate: string,
     checkIn: string,
     checkOut: string,
@@ -49,7 +49,7 @@ export interface Contact {
         phone: string,
         image: string,
     },
-    id: number,
+    _id?: string,
     subject: string,
     comment: string,
     archived: "false" | "true"

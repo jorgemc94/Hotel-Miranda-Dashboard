@@ -25,12 +25,12 @@ export const DateComment = styled.div`
 `;
 
 interface NameCommentProps {
-    $name?: boolean;
+    $name?: string;
 }
 
 export const NameComment = styled.p<NameCommentProps>`
-    color: ${props => (props.$name ? '#262626' : '#799283')};
-    font-size: ${props => (props.$name ? '1em' : '0.875em')};
+    color: ${props => (props.$name == 'true' ? '#262626' : '#799283')};
+    font-size: ${props => (props.$name == 'true' ? '1em' : '0.875em')};
 `;
 
 export const IconsComment = styled.div`
