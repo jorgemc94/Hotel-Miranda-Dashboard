@@ -18,7 +18,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16' 
+        node-version: '18'
 
     # Install dependencies
     - name: Install dependencies
@@ -27,6 +27,20 @@ jobs:
     # Build the Vite project
     - name: Build Vite App
       run: npm run build
+
+    # Run Jest tests
+    - name: Run Jest tests
+      run: npm run test
+
+    # Run Cypress tests
+    - name: Run Cypress tests
+      uses: cypress-io/github-action@v4
+      with:
+        start: npm run dev 
+        wait-on: 'http://localhost:5173'
+        browser: chrome
+      env:
+        CI: true
 
     # Sync files to S3 using jakejarvis/s3-sync-action
     - name: Deploy to S3
@@ -39,18 +53,3 @@ jobs:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
         SOURCE_DIR: 'dist'
-
-    # Run Jest tests
-    - name: Run Jest tests
-      run: npm run test
-
-    # Run Cypress tests
-    - name: Run Cypress tests
-      uses: cypress-io/github-action@v4
-      with:
-        start: npm start
-        wait-on: 'http://localhost:5173'
-        browser: chrome
-      env:
-        CI: true
-
