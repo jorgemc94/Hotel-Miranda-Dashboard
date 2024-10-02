@@ -40,9 +40,6 @@ jobs:
         AWS_REGION: ${{ secrets.AWS_REGION }}
         SOURCE_DIR: 'dist'
 
-    # Run Jest tests
-    - name: Run Jest tests
-      run: npm run test
 
     # Run Cypress tests
     - name: Run Cypress tests

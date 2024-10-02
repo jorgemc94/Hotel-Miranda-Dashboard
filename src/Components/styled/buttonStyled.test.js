@@ -4,7 +4,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
-describe('ButtonStyles component', () => {
+
     test('renders with prev style', () => {
         render(<ButtonStyled styled="view">Prev</ButtonStyled>);
         const button = screen.getByText('Prev');
@@ -20,4 +20,3 @@ describe('ButtonStyles component', () => {
         expect(button).toHaveStyle('border: 1px solid #799283');
         expect(button).toHaveStyle('width: 9em');
     });
-});
