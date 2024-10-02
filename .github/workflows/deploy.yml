@@ -39,5 +39,8 @@ jobs:
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
         SOURCE_DIR: 'dist'
-
+        
+    # Run Jest tests
+    - name: Run Jest tests
+      run: npm run test
 
